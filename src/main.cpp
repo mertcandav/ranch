@@ -9,6 +9,9 @@
 #include "../include/strings/strings.hpp"
 #include "../include/terminal/commands/commands.hpp"
 
+#define IS_COMMAND(cmd) cmd[0] == ':'
+#define REMOVE_COMMAND_OPERATOR(cmd) Ranch::strings::wleft_trim(cmd.substr(1))
+
 Ranch::terminal *term;
 
 void command_exit(std::wstring ns, std::wstring cmd) {
@@ -33,7 +36,10 @@ void process_command(std::wstring cmd) {
 void terminal_loop(std::wstring cmd) {
   cmd = Ranch::strings::wtrim(cmd);
   if (cmd.empty()) { return; }
-  process_command(cmd);
+  if (IS_COMMAND(cmd)) {
+    process_command(REMOVE_COMMAND_OPERATOR(cmd));
+    return;
+  }
 }
 
 int main(int argc, char **argv) {
