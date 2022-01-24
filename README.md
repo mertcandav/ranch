@@ -1,5 +1,5 @@
 # Ranch
-Ranch is a toy open source CLI based calculator for fun.
+Ranch is a toy CLI based calculator for fun.
 
 The purpose of this project, make calculator for fun.<br>
 Features such as built-in functions, operation priority, operators, and user-defined functions are planned.
