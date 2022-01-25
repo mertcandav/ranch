@@ -1,3 +1,4 @@
+#include "id.h"
 #include "token.hpp"
 
 Ranch::lex::token::token() noexcept {

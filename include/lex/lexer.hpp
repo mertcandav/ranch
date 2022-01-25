@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "token.hpp"
-#include "../terminal/ansi/ansi.h"
 
 namespace Ranch::lex {
 class lexer {

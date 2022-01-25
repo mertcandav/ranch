@@ -5,7 +5,6 @@
 #define __RANCH_TOKEN 1
 
 #include <iostream>
-#include "id.h"
 
 namespace Ranch::lex {
 struct token {
