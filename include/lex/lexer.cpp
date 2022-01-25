@@ -36,7 +36,9 @@ Ranch::lex::token Ranch::lex::lexer::next(void) noexcept {
     token.id = ID_IGNORE;
     return token;
   }
+  token.column = this->column;
   std::wstring text = this->text.substr(this->column);
+  if (this->lex_numeric(text, &token))  { goto end; }
   if (this->lex_operator(text, &token)) { goto end; }
   token.id = ID_IGNORE;
   this->error();
@@ -46,7 +48,7 @@ end:
 }
 
 void Ranch::lex::lexer::resume(void) noexcept {
-  while (Ranch::strings::wis_space(this->text[this->column])) {
+  while (Ranch::strings::is_space(this->text[this->column])) {
     ++this->column;
   }
 }
@@ -61,7 +63,7 @@ constexpr inline bool Ranch::lex::lexer::ended(void) const noexcept {
 }
 
 bool Ranch::lex::lexer::lex_operator(
-  std::wstring text,
+  const std::wstring text,
   Ranch::lex::token *token) noexcept {
   bool state = false;
   if (state = IS_OPERATOR(text, L"+")) {
@@ -74,6 +76,17 @@ bool Ranch::lex::lexer::lex_operator(
     *token = MAKE_OPERATOR(L"/", this->column);
   }
   return state;
+}
+
+bool Ranch::lex::lexer::lex_numeric(
+  const std::wstring text,
+  Ranch::lex::token *token) noexcept {
+  if (!Ranch::strings::is_number(text[0])) { return false; }
+  uint64_t column = 0;
+  while (++column < text.length() && Ranch::strings::is_number(text[column]));
+  token->id = ID_VALUE;
+  token->kind = text.substr(0, column);
+  return true;
 }
 
 void Ranch::lex::lexer::error(void) noexcept {

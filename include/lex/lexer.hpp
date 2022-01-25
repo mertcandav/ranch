@@ -18,7 +18,8 @@ private:
   uint64_t column;
 
   void resume(void) noexcept;
-  bool lex_operator(std::wstring text, Ranch::lex::token *token) noexcept;
+  bool lex_operator(const std::wstring text, Ranch::lex::token *token) noexcept;
+  bool lex_numeric(const std::wstring text, Ranch::lex::token *token) noexcept;
   void error(void) noexcept;
 public:
   lexer(std::wstring text) noexcept;
