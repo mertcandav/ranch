@@ -3,10 +3,15 @@
 
 #include "terminal.hpp"
 
-Ranch::terminal::terminal() {}
+Ranch::terminal::terminal() noexcept {
+  this->routine_message = L"";
+  this->sep = L"";
+  this->_inloop = false;
+}
+
 Ranch::terminal::~terminal() {}
 
-std::wstring Ranch::terminal::once() {
+std::wstring Ranch::terminal::once(void) const noexcept {
   std::wcout << this->routine_message;
   std::wcout << this->sep;
   std::wstring input;
@@ -25,10 +30,10 @@ void Ranch::terminal::loop(void(*f)(std::wstring cmd)) {
   }
 }
 
-inline void Ranch::terminal::stop() noexcept {
+inline void Ranch::terminal::stop(void) noexcept {
   this->_inloop = false;
 }
 
-inline bool Ranch::terminal::inloop() noexcept {
+constexpr inline bool Ranch::terminal::inloop(void) const noexcept {
   return this->_inloop;
 }

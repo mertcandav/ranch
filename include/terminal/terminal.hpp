@@ -17,13 +17,13 @@ public:
   std::wstring sep;
   std::wstring routine_message;
 
-  terminal();
+  terminal() noexcept;
   ~terminal();
 
-  std::wstring once();
+  std::wstring once(void) const noexcept;
   void loop(void(*f)(std::wstring cmd));
-  inline void stop() noexcept;
-  inline bool inloop() noexcept;
+  inline void stop(void) noexcept;
+  constexpr inline bool inloop(void) const noexcept;
 };
 }
 

@@ -10,13 +10,15 @@
 #include <algorithm>
 
 namespace Ranch::strings {
-std::wstring string_to_wide(std::string str) noexcept;
+std::wstring string_to_wide(const std::string str) noexcept;
 std::wstring wleft_trim(std::wstring str) noexcept;
 std::wstring wright_trim(std::wstring str) noexcept;
 std::wstring wtrim(std::wstring str) noexcept;
 std::string left_trim(std::string str) noexcept;
 std::string right_trim(std::string str) noexcept;
-std::string trim(std::string str) noexcept;
+inline std::string trim(std::string str) noexcept;
+inline bool is_space(const char ch) noexcept;
+bool wis_space(wchar_t wch) noexcept;
 }
 
 #endif

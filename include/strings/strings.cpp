@@ -3,7 +3,7 @@
 
 #include "strings.hpp"
 
-std::wstring Ranch::strings::string_to_wide(std::string str) noexcept {
+std::wstring Ranch::strings::string_to_wide(const std::string str) noexcept {
   std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
   return converter.from_bytes(str);
 }
@@ -40,6 +40,22 @@ std::string Ranch::strings::right_trim(std::string str) noexcept {
   return str;
 }
 
-std::string Ranch::strings::trim(std::string str) noexcept {
+inline std::string Ranch::strings::trim(std::string str) noexcept {
   return left_trim(right_trim(str));
+}
+
+inline bool Ranch::strings::is_space(const char ch) noexcept {
+  return ch == ' '  ||
+         ch == '\t' ||
+         ch == '\v' ||
+         ch == '\r' ||
+         ch == '\f';
+}
+
+bool Ranch::strings::wis_space(const wchar_t wch) noexcept {
+  return wch == L' '  ||
+         wch == L'\t' ||
+         wch == L'\v' ||
+         wch == L'\r' ||
+         wch == L'\f';
 }

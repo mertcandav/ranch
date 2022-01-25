@@ -4,8 +4,8 @@
 #include <iostream>
 
 namespace Ranch::commands {
-std::wstring get_head(std::wstring cmd);
-std::wstring out_head(std::wstring cmd);
+std::wstring get_head(std::wstring cmd) noexcept;
+std::wstring out_head(std::wstring cmd) noexcept;
 }
 
 #endif

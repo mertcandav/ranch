@@ -3,18 +3,26 @@
 
 #include <iostream>
 #include <locale>
+#include <vector>
 
 #include "../include/ranch.h"
-#include "../include/terminal/terminal.hpp"
+#include "../include/lex/lexer.hpp"
+#include "../include/lex/token.hpp"
 #include "../include/strings/strings.hpp"
+#include "../include/terminal/terminal.hpp"
 #include "../include/terminal/commands/commands.hpp"
 
 #define IS_COMMAND(cmd) cmd[0] == ':'
 #define REMOVE_COMMAND_OPERATOR(cmd) Ranch::strings::wleft_trim(cmd.substr(1))
 
+void command_exit(const std::wstring ns, const std::wstring cmd) noexcept;
+void process_command(std::wstring cmd);
+void terminal_loop(std::string text);
+void parse_expr(std::wstring text);
+
 Ranch::terminal *term;
 
-void command_exit(std::wstring ns, std::wstring cmd) {
+void command_exit(const std::wstring ns, const std::wstring cmd) noexcept {
   if (cmd != L"") {
     LOG_ERROR(L"exit command is should be single!")
     return;
@@ -33,13 +41,23 @@ void process_command(std::wstring cmd) {
   }
 }
 
-void terminal_loop(std::wstring cmd) {
-  cmd = Ranch::strings::wtrim(cmd);
-  if (cmd.empty()) { return; }
-  if (IS_COMMAND(cmd)) {
-    process_command(REMOVE_COMMAND_OPERATOR(cmd));
+void terminal_loop(std::wstring text) {
+  text = Ranch::strings::wtrim(text);
+  if (text.empty()) { return; }
+  if (IS_COMMAND(text)) {
+    process_command(REMOVE_COMMAND_OPERATOR(text));
     return;
   }
+  parse_expr(text);
+}
+
+void parse_expr(std::wstring text) {
+  Ranch::lex::lexer lexer = Ranch::lex::lexer(text);
+  std::vector<Ranch::lex::token> tokens = lexer.lex();
+  for (Ranch::lex::token token : tokens) {
+    std::wcout << token.kind << L" ";
+  }
+  std::wcout << std::endl;
 }
 
 int main(int argc, char **argv) {
