@@ -19,7 +19,7 @@ Ranch::lex::lexer::~lexer() {
 
 std::vector<Ranch::lex::token> Ranch::lex::lexer::lex(void) noexcept {
   this->reset();
-  std::vector<Ranch::lex::token> tokens = std::vector<Ranch::lex::token>();
+  std::vector<Ranch::lex::token> tokens;
   while (!this->finished && this->column != -1) {
     Ranch::lex::token token = this->next();
     if (token.id == ID_IGNORE) { continue; }
@@ -29,7 +29,7 @@ std::vector<Ranch::lex::token> Ranch::lex::lexer::lex(void) noexcept {
 }
 
 Ranch::lex::token Ranch::lex::lexer::next(void) noexcept {
-  Ranch::lex::token token = Ranch::lex::token();
+  Ranch::lex::token token;
   this->resume();
   if (this->column >= this->text.length()) {
     this->finished = true;
@@ -48,9 +48,7 @@ end:
 }
 
 void Ranch::lex::lexer::resume(void) noexcept {
-  while (Ranch::strings::is_space(this->text[this->column])) {
-    ++this->column;
-  }
+  while (Ranch::strings::is_space(this->text[this->column])) { ++this->column; }
 }
 
 inline void Ranch::lex::lexer::reset(void) noexcept {
@@ -66,15 +64,10 @@ bool Ranch::lex::lexer::lex_operator(
   const std::wstring text,
   Ranch::lex::token *token) noexcept {
   bool state = false;
-  if (state = IS_OPERATOR(text, L"+")) {
-    *token = MAKE_OPERATOR(L"+", this->column);
-  } else if (state = IS_OPERATOR(text, L"-")) {
-    *token = MAKE_OPERATOR(L"-", this->column);
-  } else if (state = IS_OPERATOR(text, L"*")) {
-    *token = MAKE_OPERATOR(L"*", this->column);
-  } else if (state = IS_OPERATOR(text, L"/")) {
-    *token = MAKE_OPERATOR(L"/", this->column);
-  }
+       if (state = IS_OPERATOR(text, L"+")) { *token = MAKE_OPERATOR(L"+", this->column); }
+  else if (state = IS_OPERATOR(text, L"-")) { *token = MAKE_OPERATOR(L"-", this->column); }
+  else if (state = IS_OPERATOR(text, L"*")) { *token = MAKE_OPERATOR(L"*", this->column); }
+  else if (state = IS_OPERATOR(text, L"/")) { *token = MAKE_OPERATOR(L"/", this->column); }
   return state;
 }
 

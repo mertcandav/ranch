@@ -15,12 +15,12 @@
 #define IS_COMMAND(cmd) cmd[0] == ':'
 #define REMOVE_COMMAND_OPERATOR(cmd) Ranch::strings::wleft_trim(cmd.substr(1))
 
+Ranch::terminal *term;
+
 void command_exit(const std::wstring ns, const std::wstring cmd) noexcept;
 void process_command(std::wstring cmd);
 void terminal_loop(std::string text);
 void parse_expr(std::wstring text);
-
-Ranch::terminal *term;
 
 void command_exit(const std::wstring ns, const std::wstring cmd) noexcept {
   if (cmd != L"") {
@@ -34,11 +34,8 @@ void process_command(std::wstring cmd) {
   std::wstring ns = Ranch::commands::get_head(cmd);
   cmd = Ranch::commands::out_head(cmd);
   cmd = Ranch::strings::wtrim(cmd);
-  if (ns == L"exit") {
-    command_exit(ns, cmd);
-  } else {
-    LOG_ERROR(L"There is not such command!");
-  }
+  if (ns == L"exit") { command_exit(ns, cmd); }
+  else               { LOG_ERROR(L"There is not such command!"); }
 }
 
 void terminal_loop(std::wstring text) {
@@ -52,7 +49,7 @@ void terminal_loop(std::wstring text) {
 }
 
 void parse_expr(std::wstring text) {
-  Ranch::lex::lexer lexer = Ranch::lex::lexer(text);
+  Ranch::lex::lexer lexer(text);
   std::vector<Ranch::lex::token> tokens = lexer.lex();
   for (Ranch::lex::token token : tokens) {
     std::wcout << token.kind << L" ";

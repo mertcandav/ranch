@@ -9,7 +9,7 @@ Ranch::terminal::terminal() noexcept {
   this->_inloop = false;
 }
 
-Ranch::terminal::~terminal() {}
+Ranch::terminal::~terminal() { }
 
 std::wstring Ranch::terminal::once(void) const noexcept {
   std::wcout << this->routine_message;
@@ -20,14 +20,9 @@ std::wstring Ranch::terminal::once(void) const noexcept {
 }
 
 void Ranch::terminal::loop(void(*f)(std::wstring cmd)) {
-  if (f == nullptr) {
-    throw std::invalid_argument("loop function is was nullptr");
-  }
+  if (f == nullptr) { throw std::invalid_argument("loop function is was nullptr"); }
   this->_inloop = true;
-  while (this->_inloop) {
-    std::wstring cmd = this->once();
-    (*f)(cmd);
-  }
+  while (this->_inloop) { (*f)(this->once()); }
 }
 
 inline void Ranch::terminal::stop(void) noexcept {
