@@ -73,7 +73,7 @@ bool Ranch::lex::lexer::lex_operator(
   else if (state = IS_OPERATOR(text, TOKEN_MINUS)) { token->kind = TOKEN_MINUS; }
   else if (state = IS_OPERATOR(text, TOKEN_STAR))  { token->kind = TOKEN_STAR; }
   else if (state = IS_OPERATOR(text, TOKEN_SLASH)) { token->kind = TOKEN_SLASH; }
-  // If tokenization is success, set token is an as operator.
+  // If tokenization is success, sets token is an operator.
   if (state) { token->id = ID_OPERATOR; }
   return state;
 }
