@@ -16,6 +16,8 @@ Ranch::ast::astbuilder::~astbuilder() {
 std::vector<std::vector<Ranch::lex::token>> Ranch::ast::astbuilder::build() noexcept {
   std::vector<std::vector<Ranch::lex::token>> processes;
   std::vector<Ranch::lex::token> part;
+  // If it's true, needs operator.
+  // If it's false, needs expression.
   bool _operator = false;
   uint64_t brace_count = 0;
   std::vector<Ranch::lex::token>::iterator it = this->tokens.begin();

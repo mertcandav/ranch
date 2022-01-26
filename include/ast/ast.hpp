@@ -15,13 +15,16 @@ private:
   std::vector<Ranch::lex::token> tokens;
 
   inline void push_error(std::wstring msg, Ranch::lex::token token) noexcept;
-  void check_expression_token(Ranch::lex::token token) noexcept;
 public:
   std::vector<Ranch::ast::error> errors;
 
   astbuilder(std::vector<Ranch::lex::token> tokens) noexcept;
   ~astbuilder();
 
+  // Builds binary operation AST model.
+  // Models like: [[expr], [operator], [expr], [operator], [expr]]
+  // If exists any error, pushed to errors.
+  // Check errors after build, AST build failed if exist any error.
   std::vector<std::vector<Ranch::lex::token>> build() noexcept;
 };
 }

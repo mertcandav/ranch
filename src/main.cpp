@@ -18,14 +18,21 @@
 #define IS_COMMAND(cmd) cmd[0] == TOKEN_COLON[0]
 #define REMOVE_COMMAND_OPERATOR(cmd) Ranch::strings::wleft_trim(cmd.substr(1))
 
+// term is a Ranch::terminal instance allocated from heap.
+// Allocated at entry point (main) function and deleted here.
+// Used to read input from command-line.
 Ranch::terminal *term;
 
-void command_exit(const std::wstring ns, const std::wstring cmd) noexcept;
+// exit
+void command_exit(const std::wstring cmd) noexcept;
+// Process Ranch terminal command.
 void process_command(std::wstring cmd);
+// Loop of the "term" terminal instance.
 void terminal_loop(std::string text);
+// Parses Ranch expressions.
 void parse_expr(std::wstring text);
 
-void command_exit(const std::wstring ns, const std::wstring cmd) noexcept {
+void command_exit(const std::wstring cmd) noexcept {
   if (cmd != L"") {
     LOG_ERROR(ERR_EXITCOMMAND_NOTALONE)
     return;
@@ -34,11 +41,11 @@ void command_exit(const std::wstring ns, const std::wstring cmd) noexcept {
 }
 
 void process_command(std::wstring cmd) {
-  std::wstring ns = Ranch::commands::get_head(cmd);
+  std::wstring head = Ranch::commands::get_head(cmd);
   cmd = Ranch::commands::out_head(cmd);
   cmd = Ranch::strings::wtrim(cmd);
-  if (ns == L"exit") { command_exit(ns, cmd); }
-  else               { LOG_ERROR(ERR_NOTEXIST_COMMAND); }
+  if (head == L"exit") { command_exit(cmd); }
+  else                 { LOG_ERROR(ERR_NOTEXIST_COMMAND); }
 }
 
 void terminal_loop(std::wstring text) {
@@ -71,10 +78,11 @@ void parse_expr(std::wstring text) {
 }
 
 int main(int argc, char **argv) {
-  std::setlocale(0x0, "");
+  std::setlocale(0x0, ""); // Set locale to all locales.
   term = new Ranch::terminal();
   term->routine_message = L"Ranch";
   term->sep = TOKEN_GREATER L" ";
+  // Prints once Ranch opening message at screen.
   std::wcout << "Ranch CLI Calculator" << std::endl
              << "Version " << RANCH_VERSION << std::endl
              << std::endl;

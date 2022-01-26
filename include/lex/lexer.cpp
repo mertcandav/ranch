@@ -33,16 +33,19 @@ std::vector<Ranch::lex::token> Ranch::lex::lexer::lex(void) noexcept {
 Ranch::lex::token Ranch::lex::lexer::next(void) noexcept {
   Ranch::lex::token token;
   this->resume();
+  // If ended after resume?
   if (this->column >= this->text.length()) {
     this->finished = true;
     token.id = ID_IGNORE;
     return token;
   }
-  token.column = this->column + 1;
+
+  token.column = this->column + 1; // Increase one for true column value.
   std::wstring text = this->text.substr(this->column);
+
   if (this->lex_numeric(text, &token))  { goto end; }
   if (this->lex_operator(text, &token)) { goto end; }
-  token.id = ID_IGNORE;
+  token.id = ID_IGNORE; // Set token as ignored for not appends to tokens.
   this->error();
 end:
   this->column += token.kind.length();
@@ -70,6 +73,7 @@ bool Ranch::lex::lexer::lex_operator(
   else if (state = IS_OPERATOR(text, TOKEN_MINUS)) { token->kind = TOKEN_MINUS; }
   else if (state = IS_OPERATOR(text, TOKEN_STAR))  { token->kind = TOKEN_STAR; }
   else if (state = IS_OPERATOR(text, TOKEN_SLASH)) { token->kind = TOKEN_SLASH; }
+  // If tokenization is success, set token is an as operator.
   if (state) { token->id = ID_OPERATOR; }
   return state;
 }
@@ -79,7 +83,7 @@ bool Ranch::lex::lexer::lex_numeric(
   Ranch::lex::token *token) noexcept {
   if (!Ranch::strings::is_number(text[0])) { return false; }
   uint64_t column = 0;
-  bool dotted = false;
+  bool dotted = false; // For floated values.
   while (++column < text.length()) {
     if (text[column] == TOKEN_DOT[0]) {
       if (dotted) {

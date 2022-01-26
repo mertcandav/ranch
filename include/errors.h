@@ -1,6 +1,8 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
+// This header includes error message defines.
+
 #ifndef __RANCH_ERRORS
 #define __RANCH_ERRORS 1
 

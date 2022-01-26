@@ -4,8 +4,12 @@
 #include <iostream>
 
 namespace Ranch::commands {
-std::wstring get_head(std::wstring cmd) noexcept;
-std::wstring out_head(std::wstring cmd) noexcept;
+// Returns head of command.
+// If command is only head, returns self.
+inline std::wstring get_head(const std::wstring cmd) noexcept;
+// Returns command without head.
+// If command is only head, returns empty wstring.
+inline std::wstring out_head(const std::wstring cmd) noexcept;
 }
 
 #endif
