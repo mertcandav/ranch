@@ -5,7 +5,9 @@
 #include <locale>
 #include <vector>
 
+#include "../include/errors.h"
 #include "../include/ranch.h"
+#include "../include/ast/ast.hpp"
 #include "../include/lex/lexer.hpp"
 #include "../include/lex/token.hpp"
 #include "../include/lex/tokens.h"
@@ -25,7 +27,7 @@ void parse_expr(std::wstring text);
 
 void command_exit(const std::wstring ns, const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(L"exit command is should be single!")
+    LOG_ERROR(ERR_EXITCOMMAND_NOTALONE)
     return;
   }
   std::exit(0);
@@ -36,7 +38,7 @@ void process_command(std::wstring cmd) {
   cmd = Ranch::commands::out_head(cmd);
   cmd = Ranch::strings::wtrim(cmd);
   if (ns == L"exit") { command_exit(ns, cmd); }
-  else               { LOG_ERROR(L"There is not such command!"); }
+  else               { LOG_ERROR(ERR_NOTEXIST_COMMAND); }
 }
 
 void terminal_loop(std::wstring text) {
@@ -52,8 +54,18 @@ void terminal_loop(std::wstring text) {
 void parse_expr(std::wstring text) {
   Ranch::lex::lexer lexer(text);
   std::vector<Ranch::lex::token> tokens = lexer.lex();
-  for (Ranch::lex::token token : tokens) {
-    std::wcout << token.kind << L" ";
+  Ranch::ast::astbuilder ast(tokens);
+  std::vector<std::vector<Ranch::lex::token>> operations = ast.build();
+  if (ast.errors.size() > 0) {
+    for (Ranch::ast::error error : ast.errors) { std::wcout << error << std::endl; }
+    return;
+  }
+  for (std::vector<Ranch::lex::token> tokens : operations) {
+    std::wcout << L"[ ";
+    for (Ranch::lex::token token : tokens) {
+      std::wcout << token.kind << L" ";
+    }
+    std::wcout << L"] ";
   }
   std::wcout << std::endl;
 }

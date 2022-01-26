@@ -22,7 +22,9 @@ INC_DIR := ./include
 # PHONY: clean
 all: depends pack compile
 depends: includes
-includes: lex strings terminal
+includes: ast lex strings terminal
+ast: ast_headers
+ast_headers: ast_o error_o
 lex: lex_headers
 lex_headers: lexer_o token_o
 strings: strings_headers
@@ -31,7 +33,13 @@ terminal: commands terminal_headers
 commands: commands_headers
 commands_headers: commands_o
 terminal_headers: terminal_o
-pack: pack_lex pack_terminal pack_program
+pack: pack_ast pack_lex pack_terminal pack_inc
+
+ast_o: $(INC_DIR)/ast/ast.cpp $(INC_DIR)/ast/ast.hpp
+	$(GPP) $(COMPILE) $< $(OUT) ast.o
+
+error_o: $(INC_DIR)/ast/error.cpp $(INC_DIR)/ast/error.hpp
+	$(GPP) $(COMPILE) $< $(OUT) error.o
 
 lexer_o: $(INC_DIR)/lex/lexer.cpp $(INC_DIR)/lex/lexer.hpp
 	$(GPP) $(COMPILE) $< $(OUT) lexer.o
@@ -48,17 +56,20 @@ commands_o: $(INC_DIR)/terminal/commands/commands.cpp $(INC_DIR)/terminal/comman
 terminal_o: $(INC_DIR)/terminal/terminal.cpp $(INC_DIR)/terminal/terminal.hpp
 	$(GPP) $(COMPILE) $< $(OUT) terminal.o
 
+pack_ast:
+	$(LD) $(RELOC) ast.o error.o $(OUT) $@.o
+
 pack_lex:
-	$(LD) $(RELOC) lexer.o token.o $(OUT) pack_lex.o
+	$(LD) $(RELOC) lexer.o token.o $(OUT) $@.o
 
 pack_terminal:
-	$(LD) $(RELOC) terminal.o commands.o $(OUT) pack_terminal.o
+	$(LD) $(RELOC) terminal.o commands.o $(OUT) $@.o
 
-pack_program:
-	$(LD) $(RELOC) pack_lex.o pack_terminal.o strings.o $(OUT) pack_program.o
+pack_inc:
+	$(LD) $(RELOC) pack_ast.o pack_lex.o pack_terminal.o strings.o $(OUT) $@.o
 
 compile: $(SRC_DIR)/main.cpp
-	$(GPP) $< pack_program.o $(OUT) $(EXE_OUT_NAME)
+	$(GPP) $< pack_inc.o $(OUT) $(EXE_OUT_NAME)
 
 clean:
 	$(DEL_FILE) *.o

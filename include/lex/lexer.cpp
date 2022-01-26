@@ -6,7 +6,6 @@
 #define LEXING_STOP this->column = -1
 #define LEXING_STOPPED (this->column < 0)
 #define IS_OPERATOR(text, kind) (text.find(kind) == 0)
-#define MAKE_OPERATOR(kind, column) Ranch::lex::token(ID_OPERATOR, kind, column)
 
 Ranch::lex::lexer::lexer(std::wstring text) noexcept {
   this->finished = false;
@@ -39,7 +38,7 @@ Ranch::lex::token Ranch::lex::lexer::next(void) noexcept {
     token.id = ID_IGNORE;
     return token;
   }
-  token.column = this->column;
+  token.column = this->column + 1;
   std::wstring text = this->text.substr(this->column);
   if (this->lex_numeric(text, &token))  { goto end; }
   if (this->lex_operator(text, &token)) { goto end; }
@@ -67,10 +66,11 @@ bool Ranch::lex::lexer::lex_operator(
   const std::wstring text,
   Ranch::lex::token *token) noexcept {
   bool state = false;
-       if (state = IS_OPERATOR(text, TOKEN_PLUS))  { *token = MAKE_OPERATOR(TOKEN_PLUS, this->column); }
-  else if (state = IS_OPERATOR(text, TOKEN_MINUS)) { *token = MAKE_OPERATOR(TOKEN_MINUS, this->column); }
-  else if (state = IS_OPERATOR(text, TOKEN_STAR))  { *token = MAKE_OPERATOR(TOKEN_STAR, this->column); }
-  else if (state = IS_OPERATOR(text, TOKEN_SLASH)) { *token = MAKE_OPERATOR(TOKEN_SLASH, this->column); }
+       if (state = IS_OPERATOR(text, TOKEN_PLUS))  { token->kind = TOKEN_PLUS; }
+  else if (state = IS_OPERATOR(text, TOKEN_MINUS)) { token->kind = TOKEN_MINUS; }
+  else if (state = IS_OPERATOR(text, TOKEN_STAR))  { token->kind = TOKEN_STAR; }
+  else if (state = IS_OPERATOR(text, TOKEN_SLASH)) { token->kind = TOKEN_SLASH; }
+  if (state) { token->id = ID_OPERATOR; }
   return state;
 }
 
@@ -90,6 +90,7 @@ bool Ranch::lex::lexer::lex_numeric(
       continue;
     }
     if (Ranch::strings::is_number(text[column])) { continue; }
+    break;
   }
   token->id = ID_VALUE;
   token->kind = text.substr(0, column);
@@ -99,6 +100,6 @@ bool Ranch::lex::lexer::lex_numeric(
 void Ranch::lex::lexer::error(void) noexcept {
   std::wcout << L"Error on lexing;" << std::endl
              << L"Unexpected token: '" << this->text[this->column] << L"'" << std::endl
-             << L"Column: " << ++this->column << std::endl;
+             << L"Column: " << this->column << std::endl;
   LEXING_STOP;
 }
