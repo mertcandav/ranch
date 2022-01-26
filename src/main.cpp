@@ -8,11 +8,12 @@
 #include "../include/ranch.h"
 #include "../include/lex/lexer.hpp"
 #include "../include/lex/token.hpp"
+#include "../include/lex/tokens.h"
 #include "../include/strings/strings.hpp"
 #include "../include/terminal/terminal.hpp"
 #include "../include/terminal/commands/commands.hpp"
 
-#define IS_COMMAND(cmd) cmd[0] == ':'
+#define IS_COMMAND(cmd) cmd[0] == TOKEN_COLON[0]
 #define REMOVE_COMMAND_OPERATOR(cmd) Ranch::strings::wleft_trim(cmd.substr(1))
 
 Ranch::terminal *term;
@@ -61,7 +62,7 @@ int main(int argc, char **argv) {
   std::setlocale(0x0, "");
   term = new Ranch::terminal();
   term->routine_message = L"Ranch";
-  term->sep = L"> ";
+  term->sep = TOKEN_GREATER L" ";
   std::wcout << "Ranch CLI Calculator" << std::endl
              << "Version " << RANCH_VERSION << std::endl
              << std::endl;
