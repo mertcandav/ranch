@@ -41,7 +41,7 @@ public:
   bool ended(void) const noexcept;
   // Returns lexing failed or not.
   bool fail(void) const noexcept;
-};
-}
+}; // class lexer
+} // namespace Ranch::lex
 
-#endif
+#endif // __RANCH_LEXER

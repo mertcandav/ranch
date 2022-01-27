@@ -16,4 +16,4 @@
 #define COMMAND_ABOUT L"about"
 #define COMMAND_CLEAR L"clear"
 
-#endif
+#endif // __RANCH

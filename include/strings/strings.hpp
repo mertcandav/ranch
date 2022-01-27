@@ -17,6 +17,6 @@ std::wstring wtrim(const std::wstring wstr) noexcept;
 std::wstring to_lower(std::wstring wstr) noexcept;
 bool is_space(const wchar_t wch) noexcept;
 bool is_number(const wchar_t wch) noexcept;
-}
+} // namespace Ranch::strings
 
-#endif
+#endif // __RANCH_STRINGS

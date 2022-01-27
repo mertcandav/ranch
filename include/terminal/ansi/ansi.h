@@ -77,4 +77,4 @@
 #define TITLE_SET(title) "\033]0;" title "\007"
 #define WTITLE_SET(title) L"\033]0;" title L"\007"
 
-#endif
+#endif // __RANCH_ANSI

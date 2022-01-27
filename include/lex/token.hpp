@@ -16,7 +16,7 @@ public:
   token() noexcept;
   token(uint16_t id, std::wstring kind, uint64_t column) noexcept;
   ~token();
-};
-}
+}; // struct token
+} // namespace Ranch::lex
 
-#endif
+#endif // __RANCH_TOKEN

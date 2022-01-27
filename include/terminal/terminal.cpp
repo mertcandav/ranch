@@ -1,6 +1,10 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
+#ifdef __WIN32
+#include <windows.h>
+#endif // __WIN32
+
 #include "terminal.hpp"
 
 Ranch::terminal::terminal() noexcept {
@@ -32,3 +36,14 @@ inline void Ranch::terminal::stop(void) noexcept {
 constexpr inline bool Ranch::terminal::inloop(void) const noexcept {
   return this->_inloop;
 }
+
+#ifdef __WIN32
+void Ranch::terminal::enable_virtual_terminal_processing(void) noexcept {
+  DWORD dwMode = 0;
+  HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+  if (hOut == INVALID_HANDLE_VALUE) { return; }
+  if (GetConsoleMode(hOut, &dwMode)) {
+    SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+  }
+}
+#endif // __WIN32

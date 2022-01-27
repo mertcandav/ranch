@@ -8,6 +8,7 @@
 #include "../include/errors.h"
 #include "../include/ranch.h"
 #include "../include/ast/ast.hpp"
+#include "../include/ast/asterror.hpp"
 #include "../include/lex/lexer.hpp"
 #include "../include/lex/token.hpp"
 #include "../include/lex/tokens.h"
@@ -84,6 +85,7 @@ inline void show_about(void) noexcept {
 }
 
 void process_command(std::wstring cmd) {
+  if (cmd == L"") { return; }
   std::wstring head = Ranch::commands::get_head(cmd);
   head = Ranch::strings::to_lower(head);
   cmd = Ranch::commands::out_head(cmd);
@@ -112,7 +114,7 @@ void parse_expr(std::wstring text) {
   Ranch::ast::astbuilder ast(tokens);
   std::vector<std::vector<Ranch::lex::token>> operations = ast.build();
   if (ast.errors.size() > 0) {
-    for (Ranch::ast::error error : ast.errors) { std::wcout << error << std::endl; }
+    for (Ranch::ast::asterror error : ast.errors) { std::wcout << error << std::endl; }
     return;
   }
   for (std::vector<Ranch::lex::token> tokens : operations) {
@@ -126,7 +128,11 @@ void parse_expr(std::wstring text) {
 }
 
 int main(int argc, char **argv) {
+#ifdef __WIN32
+  Ranch::terminal::enable_virtual_terminal_processing();
+#endif // __WIN32
   std::setlocale(0x0, ""); // Set locale to all locales.
+  std::wcout << TITLE_SET(L"Ranch");
   term = new Ranch::terminal();
   term->routine_message = L"Ranch";
   term->sep = TOKEN_GREATER L" ";

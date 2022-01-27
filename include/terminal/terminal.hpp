@@ -10,11 +10,18 @@
 // Prints error with new line to command-line.
 #define LOG_ERROR(msg) std::wcout << COLOR_RED << msg << FONT_RESET << std::endl
 
+#ifdef __WIN32
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+#endif // __WIN32
+
 namespace Ranch {
 class terminal {
 private:
   bool _inloop;
 public:
+#ifdef __WIN32
+  static void enable_virtual_terminal_processing(void) noexcept;
+#endif // __WIN32
 
   // Prints before reads each command-line input.
   std::wstring routine_message;
@@ -34,7 +41,7 @@ public:
   // Stops loop if looping.
   inline void stop(void) noexcept;
   constexpr inline bool inloop(void) const noexcept;
-};
-}
+}; // class terminal
+} // namespace Ranch
 
-#endif
+#endif // __RANCH_TERMINAL

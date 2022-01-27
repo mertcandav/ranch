@@ -59,5 +59,5 @@ std::vector<std::vector<Ranch::lex::token>> Ranch::ast::astbuilder::build() noex
 inline void Ranch::ast::astbuilder::push_error(
   std::wstring msg,
   Ranch::lex::token token) noexcept {
-  this->errors.push_back(Ranch::ast::error(msg, token.column));
+  this->errors.push_back(Ranch::ast::asterror(msg, token.column));
 }

@@ -10,6 +10,6 @@ std::wstring get_head(const std::wstring cmd) noexcept;
 // Returns command without head.
 // If command is only head, returns empty wstring.
 std::wstring out_head(const std::wstring cmd) noexcept;
-}
+} // namespace Ranch::commands
 
-#endif
+#endif // __RANCH_COMMANDS

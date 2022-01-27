@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include "error.hpp"
+#include "asterror.hpp"
 #include "../lex/token.hpp"
 
 namespace Ranch::ast {
@@ -16,7 +16,7 @@ private:
 
   inline void push_error(std::wstring msg, Ranch::lex::token token) noexcept;
 public:
-  std::vector<Ranch::ast::error> errors;
+  std::vector<Ranch::ast::asterror> errors;
 
   astbuilder(std::vector<Ranch::lex::token> tokens) noexcept;
   ~astbuilder();
@@ -26,7 +26,7 @@ public:
   // If exists any error, pushed to errors.
   // Check errors after build, AST build failed if exist any error.
   std::vector<std::vector<Ranch::lex::token>> build() noexcept;
-};
-}
+}; // class astbuilder
+} // namespace Ranch::ast
 
-#endif
+#endif // __RANCH_AST

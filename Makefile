@@ -24,7 +24,7 @@ all: depends pack compile
 depends: includes
 includes: ast lex strings terminal
 ast: ast_headers
-ast_headers: ast_o error_o
+ast_headers: ast_o asterror_o
 lex: lex_headers
 lex_headers: lexer_o token_o
 strings: strings_headers
@@ -38,8 +38,8 @@ pack: pack_ast pack_lex pack_terminal pack_inc
 ast_o: $(INC_DIR)/ast/ast.cpp $(INC_DIR)/ast/ast.hpp
 	$(GPP) $(COMPILE) $< $(OUT) ast.o
 
-error_o: $(INC_DIR)/ast/error.cpp $(INC_DIR)/ast/error.hpp
-	$(GPP) $(COMPILE) $< $(OUT) error.o
+asterror_o: $(INC_DIR)/ast/asterror.cpp $(INC_DIR)/ast/asterror.hpp
+	$(GPP) $(COMPILE) $< $(OUT) asterror.o
 
 lexer_o: $(INC_DIR)/lex/lexer.cpp $(INC_DIR)/lex/lexer.hpp
 	$(GPP) $(COMPILE) $< $(OUT) lexer.o
@@ -57,7 +57,7 @@ terminal_o: $(INC_DIR)/terminal/terminal.cpp $(INC_DIR)/terminal/terminal.hpp
 	$(GPP) $(COMPILE) $< $(OUT) terminal.o
 
 pack_ast:
-	$(LD) $(RELOC) ast.o error.o $(OUT) $@.o
+	$(LD) $(RELOC) ast.o asterror.o $(OUT) $@.o
 
 pack_lex:
 	$(LD) $(RELOC) lexer.o token.o $(OUT) $@.o

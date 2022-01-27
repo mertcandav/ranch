@@ -11,4 +11,4 @@
 #define ERR_OPERATOR_OVERFLOW L"operator overlow"
 #define ERR_INVALID_SYNTAX L"invalid syntax"
 
-#endif
+#endif // __RANCH_ERRORS

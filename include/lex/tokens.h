@@ -35,4 +35,4 @@
 #define TOKEN_AMPER L"&"
 #define TOKEN_VBAR L"|"
 
-#endif
+#endif // __RANCH_TOKENS
