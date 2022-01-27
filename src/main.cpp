@@ -25,6 +25,10 @@ Ranch::terminal *term;
 
 // exit
 void command_exit(const std::wstring cmd) noexcept;
+// about
+void command_about(const std::wstring cmd) noexcept;
+// Prints about text.
+inline void show_about(void) noexcept;
 // Process Ranch terminal command.
 void process_command(std::wstring cmd);
 // Loop of the "term" terminal instance.
@@ -34,18 +38,36 @@ void parse_expr(std::wstring text);
 
 void command_exit(const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(ERR_EXITCOMMAND_NOTALONE)
+    LOG_ERROR(ERR_COMMAND_EXIT_NOTALONE)
     return;
   }
   std::exit(0);
+}
+
+void command_about(const std::wstring cmd) noexcept {
+  if (cmd != L"") {
+    LOG_ERROR(ERR_COMMAND_ABOUT_NOTALONE)
+    return;
+  }
+  show_about();
+}
+
+inline void show_about(void) noexcept {
+  std::wcout << L"Ranch CLI Calculator" << std::endl
+             << L"Version: " << RANCH_VERSION << std::endl
+             << L"Release: " << RANCH_RELEASE << std::endl
+             << std::endl << "CONTRIBUTE" << std::endl
+             << L"Repository: " << RANCH_REPOSITORY
+             << std::endl << std::endl;
 }
 
 void process_command(std::wstring cmd) {
   std::wstring head = Ranch::commands::get_head(cmd);
   cmd = Ranch::commands::out_head(cmd);
   cmd = Ranch::strings::wtrim(cmd);
-  if (head == L"exit") { command_exit(cmd); }
-  else                 { LOG_ERROR(ERR_NOTEXIST_COMMAND); }
+       if (head == COMMAND_EXIT)  { command_exit(cmd); }
+  else if (head == COMMAND_ABOUT) { command_about(cmd); }
+  else                            { LOG_ERROR(ERR_NOTEXIST_COMMAND); }
 }
 
 void terminal_loop(std::wstring text) {
@@ -61,6 +83,7 @@ void terminal_loop(std::wstring text) {
 void parse_expr(std::wstring text) {
   Ranch::lex::lexer lexer(text);
   std::vector<Ranch::lex::token> tokens = lexer.lex();
+  if (lexer.fail()) { return; }
   Ranch::ast::astbuilder ast(tokens);
   std::vector<std::vector<Ranch::lex::token>> operations = ast.build();
   if (ast.errors.size() > 0) {

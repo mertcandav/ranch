@@ -12,6 +12,7 @@
 namespace Ranch::lex {
 class lexer {
 private:
+  bool failed;
   bool finished;
   // Text to lex.
   std::wstring text;
@@ -37,7 +38,9 @@ public:
   std::vector<Ranch::lex::token> lex(void) noexcept;
   // Lexs and returns next token.
   Ranch::lex::token next(void) noexcept;
-  constexpr inline bool ended(void) const noexcept;
+  bool ended(void) const noexcept;
+  // Returns lexing failed or not.
+  bool fail(void) const noexcept;
 };
 }
 

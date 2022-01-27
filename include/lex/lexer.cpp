@@ -9,6 +9,7 @@
 
 Ranch::lex::lexer::lexer(std::wstring text) noexcept {
   this->finished = false;
+  this->failed = false;
   this->text = text;
   this->column = 0;
 }
@@ -16,6 +17,7 @@ Ranch::lex::lexer::lexer(std::wstring text) noexcept {
 Ranch::lex::lexer::~lexer() {
   this->text.clear();
   this->column = 0;
+  this->failed = false;
   this->finished = false;
 }
 
@@ -34,8 +36,7 @@ Ranch::lex::token Ranch::lex::lexer::next(void) noexcept {
   Ranch::lex::token token;
   this->resume();
   // If ended after resume?
-  if (this->column >= this->text.length()) {
-    this->finished = true;
+  if (this->finished = this->column >= this->text.length()) {
     token.id = ID_IGNORE;
     return token;
   }
@@ -47,6 +48,7 @@ Ranch::lex::token Ranch::lex::lexer::next(void) noexcept {
   if (this->lex_operator(text, &token)) { goto end; }
   token.id = ID_IGNORE; // Set token as ignored for not appends to tokens.
   this->error();
+  return token;
 end:
   this->column += token.kind.length();
   return token;
@@ -61,7 +63,7 @@ inline void Ranch::lex::lexer::reset(void) noexcept {
   this->column = 0;
 }
 
-constexpr inline bool Ranch::lex::lexer::ended(void) const noexcept {
+bool Ranch::lex::lexer::ended(void) const noexcept {
   return this->finished;
 }
 
@@ -104,6 +106,11 @@ bool Ranch::lex::lexer::lex_numeric(
 void Ranch::lex::lexer::error(void) noexcept {
   std::wcout << L"Error on lexing;" << std::endl
              << L"Unexpected token: '" << this->text[this->column] << L"'" << std::endl
-             << L"Column: " << this->column << std::endl;
+             << L"Column: " << this->column+1 << std::endl;
+  this->failed = true;
   LEXING_STOP;
+}
+
+bool Ranch::lex::lexer::fail(void) const noexcept {
+  return this->failed;
 }
