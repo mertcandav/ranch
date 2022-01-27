@@ -23,11 +23,9 @@
 // Used to read input from command-line.
 Ranch::terminal *term;
 
-// exit
+void command_help(const std::wstring cmd) noexcept;
 void command_exit(const std::wstring cmd) noexcept;
-// about
 void command_about(const std::wstring cmd) noexcept;
-// Prints about text.
 inline void show_about(void) noexcept;
 // Process Ranch terminal command.
 void process_command(std::wstring cmd);
@@ -36,9 +34,22 @@ void terminal_loop(std::string text);
 // Parses Ranch expressions.
 void parse_expr(std::wstring text);
 
+void command_help(const std::wstring cmd) noexcept {
+  if (cmd != L"") {
+    LOG_ERROR(ERR_COMMAND_NOTALONE)
+    return;
+  }
+  std::wcout
+    << "COMMAND             DESCRIPTION" << std::endl
+    << "HELP                Show help" << std::endl
+    << "EXIT                Exit Ranch" << std::endl
+    << "ABOUT               Show about of Ranch" << std::endl
+    << std::endl;
+}
+
 void command_exit(const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(ERR_COMMAND_EXIT_NOTALONE)
+    LOG_ERROR(ERR_COMMAND_NOTALONE)
     return;
   }
   std::exit(0);
@@ -46,7 +57,7 @@ void command_exit(const std::wstring cmd) noexcept {
 
 void command_about(const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(ERR_COMMAND_ABOUT_NOTALONE)
+    LOG_ERROR(ERR_COMMAND_NOTALONE)
     return;
   }
   show_about();
@@ -65,7 +76,8 @@ void process_command(std::wstring cmd) {
   std::wstring head = Ranch::commands::get_head(cmd);
   cmd = Ranch::commands::out_head(cmd);
   cmd = Ranch::strings::wtrim(cmd);
-       if (head == COMMAND_EXIT)  { command_exit(cmd); }
+       if (head == COMMAND_HELP)  { command_help(cmd); }
+  else if (head == COMMAND_EXIT)  { command_exit(cmd); }
   else if (head == COMMAND_ABOUT) { command_about(cmd); }
   else                            { LOG_ERROR(ERR_NOTEXIST_COMMAND); }
 }

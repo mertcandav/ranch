@@ -11,6 +11,7 @@
 
 #define RANCH_REPOSITORY "https://github.com/mertcandav/ranch"
 
+#define COMMAND_HELP L"help"
 #define COMMAND_EXIT L"exit"
 #define COMMAND_ABOUT L"about"
 
