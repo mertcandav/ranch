@@ -13,6 +13,7 @@
 #include "../include/lex/tokens.h"
 #include "../include/strings/strings.hpp"
 #include "../include/terminal/terminal.hpp"
+#include "../include/terminal/ansi/ansi.h"
 #include "../include/terminal/commands/commands.hpp"
 
 #define IS_COMMAND(cmd) cmd[0] == TOKEN_COLON[0]
@@ -26,6 +27,7 @@ Ranch::terminal *term;
 void command_help(const std::wstring cmd) noexcept;
 void command_exit(const std::wstring cmd) noexcept;
 void command_about(const std::wstring cmd) noexcept;
+void command_clear(const std::wstring cmd) noexcept;
 inline void show_about(void) noexcept;
 // Process Ranch terminal command.
 void process_command(std::wstring cmd);
@@ -44,6 +46,7 @@ void command_help(const std::wstring cmd) noexcept {
     << "HELP                Show help" << std::endl
     << "EXIT                Exit Ranch" << std::endl
     << "ABOUT               Show about of Ranch" << std::endl
+    << "CLEAR               Clear command-line screen" << std::endl
     << std::endl;
 }
 
@@ -63,6 +66,14 @@ void command_about(const std::wstring cmd) noexcept {
   show_about();
 }
 
+void command_clear(const std::wstring cmd) noexcept {
+  if (cmd != L"") {
+    LOG_ERROR(ERR_COMMAND_NOTALONE);
+    return;
+  }
+  std::wcout << CLEAR_SCREEN << POSITION_SET(L"0", L"0");
+}
+
 inline void show_about(void) noexcept {
   std::wcout << L"Ranch CLI Calculator" << std::endl
              << L"Version: " << RANCH_VERSION << std::endl
@@ -80,6 +91,7 @@ void process_command(std::wstring cmd) {
        if (head == COMMAND_HELP)  { command_help(cmd); }
   else if (head == COMMAND_EXIT)  { command_exit(cmd); }
   else if (head == COMMAND_ABOUT) { command_about(cmd); }
+  else if (head == COMMAND_CLEAR) { command_clear(cmd); }
   else                            { LOG_ERROR(ERR_NOTEXIST_COMMAND); }
 }
 

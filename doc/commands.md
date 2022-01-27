@@ -8,6 +8,7 @@ Example syntax: `Ranch> :${COMMAND}`
 + [help](#help)
 + [exit](#exit)
 + [about](#about)
++ [clear](#clear)
 
 <h2 id="help">help</h2>
 Show help.
@@ -17,3 +18,6 @@ Exit from Ranch.
 
 <h2 id="about">about</h2>
 About of Ranch.
+
+<h2 id="clear">clear</h2>
+Clear command-line screen.

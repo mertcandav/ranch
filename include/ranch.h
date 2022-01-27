@@ -14,5 +14,6 @@
 #define COMMAND_HELP L"help"
 #define COMMAND_EXIT L"exit"
 #define COMMAND_ABOUT L"about"
+#define COMMAND_CLEAR L"clear"
 
 #endif
