@@ -36,7 +36,7 @@ void parse_expr(std::wstring text);
 
 void command_help(const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(ERR_COMMAND_NOTALONE)
+    LOG_ERROR(ERR_COMMAND_NOTALONE);
     return;
   }
   std::wcout
@@ -49,7 +49,7 @@ void command_help(const std::wstring cmd) noexcept {
 
 void command_exit(const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(ERR_COMMAND_NOTALONE)
+    LOG_ERROR(ERR_COMMAND_NOTALONE);
     return;
   }
   std::exit(0);
@@ -57,7 +57,7 @@ void command_exit(const std::wstring cmd) noexcept {
 
 void command_about(const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(ERR_COMMAND_NOTALONE)
+    LOG_ERROR(ERR_COMMAND_NOTALONE);
     return;
   }
   show_about();
@@ -74,6 +74,7 @@ inline void show_about(void) noexcept {
 
 void process_command(std::wstring cmd) {
   std::wstring head = Ranch::commands::get_head(cmd);
+  head = Ranch::strings::to_lower(head);
   cmd = Ranch::commands::out_head(cmd);
   cmd = Ranch::strings::wtrim(cmd);
        if (head == COMMAND_HELP)  { command_help(cmd); }

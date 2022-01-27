@@ -8,7 +8,7 @@
 #include "ansi/ansi.h"
 
 // Prints error with new line to command-line.
-#define LOG_ERROR(msg) std::wcout << COLOR_RED << msg << FONT_RESET << std::endl;
+#define LOG_ERROR(msg) std::wcout << COLOR_RED << msg << FONT_RESET << std::endl
 
 namespace Ranch {
 class terminal {

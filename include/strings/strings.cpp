@@ -22,8 +22,14 @@ std::wstring Ranch::strings::wright_trim(std::wstring wstr) noexcept {
   return wstr;
 }
 
-std::wstring Ranch::strings::wtrim(std::wstring wstr) noexcept {
+std::wstring Ranch::strings::wtrim(const std::wstring wstr) noexcept {
   return wleft_trim(wright_trim(wstr));
+}
+
+std::wstring Ranch::strings::to_lower(std::wstring wstr) noexcept {
+  std::transform(wstr.begin(), wstr.end(), wstr.begin(),
+    [](wchar_t wch){ return std::tolower(wch); });
+  return wstr;
 }
 
 bool Ranch::strings::is_space(const wchar_t wch) noexcept {
