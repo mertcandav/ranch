@@ -6,6 +6,10 @@
 #ifndef __RANCH
 #define __RANCH 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 #define RANCH_VERSION "0.0.1"
 #define RANCH_RELEASE "Stable"
 
@@ -15,5 +19,9 @@
 #define COMMAND_EXIT L"exit"
 #define COMMAND_ABOUT L"about"
 #define COMMAND_CLEAR L"clear"
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif // __RANCH

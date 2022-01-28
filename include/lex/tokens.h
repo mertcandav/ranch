@@ -6,6 +6,10 @@
 #ifndef __RANCH_TOKENS
 #define __RANCH_TOKENS 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 #define TOKEN_COLON L":"
 #define TOKEN_COMMA L","
 #define TOKEN_SEMICOLON L";"
@@ -34,5 +38,9 @@
 #define TOKEN_EQUALS L"="
 #define TOKEN_AMPER L"&"
 #define TOKEN_VBAR L"|"
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif // __RANCH_TOKENS

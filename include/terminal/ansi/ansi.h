@@ -6,6 +6,10 @@
 #ifndef __RANCH_ANSI
 #define __RANCH_ANSI 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 #define CLEAR_SCREEN "\u001b[2J"
 #define CLEAR_SCREEN_CB "\u001b[1J"
 #define CLEAR_SCREEN_CE "\u001b[0J"
@@ -76,5 +80,9 @@
 
 #define TITLE_SET(title) "\033]0;" title "\007"
 #define WTITLE_SET(title) L"\033]0;" title L"\007"
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif // __RANCH_ANSI
