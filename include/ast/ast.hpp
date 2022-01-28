@@ -10,22 +10,25 @@
 #include "../lex/token.hpp"
 
 namespace Ranch::ast {
+typedef std::vector<Ranch::lex::token> process_tokens;
+typedef std::vector<Ranch::ast::process_tokens> process_model;
+
 class astbuilder {
 private:
-  std::vector<Ranch::lex::token> tokens;
+  Ranch::ast::process_tokens tokens;
 
   inline void push_error(std::wstring msg, Ranch::lex::token token) noexcept;
 public:
   std::vector<Ranch::ast::asterror> errors;
 
-  astbuilder(std::vector<Ranch::lex::token> tokens) noexcept;
+  astbuilder(Ranch::ast::process_tokens tokens) noexcept;
   ~astbuilder();
 
   // Builds binary operation AST model.
   // Models like: [[expr], [operator], [expr], [operator], [expr]]
   // If exists any error, pushed to errors.
   // Check errors after build, AST build failed if exist any error.
-  std::vector<std::vector<Ranch::lex::token>> build() noexcept;
+  Ranch::ast::process_model build() noexcept;
 }; // class astbuilder
 } // namespace Ranch::ast
 

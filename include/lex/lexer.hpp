@@ -24,7 +24,7 @@ private:
   // Skips if starts with spaces or something ignored values.
   void resume(void) noexcept;
   bool lex_operator(const std::wstring text, Ranch::lex::token *token) noexcept;
-  bool lex_numeric(const std::wstring text, Ranch::lex::token *token) noexcept;
+  bool lex_numeric(std::wstring text, Ranch::lex::token *token) noexcept;
   // Prints error and stops lexing.
   void error(void) noexcept;
 public:

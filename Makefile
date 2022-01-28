@@ -22,7 +22,9 @@ INC_DIR := ./include
 # PHONY: clean
 all: depends pack compile
 depends: includes
-includes: ast lex strings terminal
+includes: inc ast lex strings terminal
+inc: inc_headers
+inc_headers: binopr_o value_o
 ast: ast_headers
 ast_headers: ast_o asterror_o
 lex: lex_headers
@@ -33,7 +35,13 @@ terminal: commands terminal_headers
 commands: commands_headers
 commands_headers: commands_o
 terminal_headers: terminal_o
-pack: pack_ast pack_lex pack_terminal pack_inc
+pack: pack_inc pack_ast pack_lex pack_terminal pack_program
+
+binopr_o: $(INC_DIR)/binopr.c $(INC_DIR)/binopr.h
+	$(GPP) $(COMPILE) $< $(OUT) binopr.o
+
+value_o: $(INC_DIR)/value.c $(INC_DIR)/value.h
+	$(GPP) $(COMPILE) $< $(OUT) value.o
 
 ast_o: $(INC_DIR)/ast/ast.cpp $(INC_DIR)/ast/ast.hpp
 	$(GPP) $(COMPILE) $< $(OUT) ast.o
@@ -56,6 +64,9 @@ commands_o: $(INC_DIR)/terminal/commands/commands.cpp $(INC_DIR)/terminal/comman
 terminal_o: $(INC_DIR)/terminal/terminal.cpp $(INC_DIR)/terminal/terminal.hpp
 	$(GPP) $(COMPILE) $< $(OUT) terminal.o
 
+pack_inc:
+	$(LD) $(RELOC) binopr.o value.o $(OUT) $@.o
+
 pack_ast:
 	$(LD) $(RELOC) ast.o asterror.o $(OUT) $@.o
 
@@ -65,11 +76,11 @@ pack_lex:
 pack_terminal:
 	$(LD) $(RELOC) terminal.o commands.o $(OUT) $@.o
 
-pack_inc:
-	$(LD) $(RELOC) pack_ast.o pack_lex.o pack_terminal.o strings.o $(OUT) $@.o
+pack_program:
+	$(LD) $(RELOC) pack_inc.o pack_ast.o pack_lex.o pack_terminal.o strings.o $(OUT) $@.o
 
 compile: $(SRC_DIR)/main.cpp
-	$(GPP) $< pack_inc.o $(OUT) $(EXE_OUT_NAME)
+	$(GPP) $< pack_program.o $(OUT) $(EXE_OUT_NAME)
 
 clean:
 	$(DEL_FILE) *.o

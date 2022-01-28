@@ -81,7 +81,7 @@ bool Ranch::lex::lexer::lex_operator(
 }
 
 bool Ranch::lex::lexer::lex_numeric(
-  const std::wstring text,
+  std::wstring text,
   Ranch::lex::token *token) noexcept {
   if (!Ranch::strings::is_number(text[0])) { return false; }
   uint64_t column = 0;
@@ -93,6 +93,7 @@ bool Ranch::lex::lexer::lex_numeric(
         return false;
       }
       dotted = true;
+      text[column] = L','; // For parsing with floating.
       continue;
     }
     if (Ranch::strings::is_number(text[column])) { continue; }

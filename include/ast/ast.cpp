@@ -4,8 +4,7 @@
 #include "../lex/tokens.h"
 #include "../strings/strings.hpp"
 
-Ranch::ast::astbuilder::astbuilder(
-  std::vector<Ranch::lex::token> tokens) noexcept {
+Ranch::ast::astbuilder::astbuilder(Ranch::ast::process_tokens tokens) noexcept {
   this->tokens = tokens;
 }
 
@@ -13,15 +12,15 @@ Ranch::ast::astbuilder::~astbuilder() {
   this->tokens.clear();
 }
 
-std::vector<std::vector<Ranch::lex::token>> Ranch::ast::astbuilder::build() noexcept {
-  std::vector<std::vector<Ranch::lex::token>> processes;
-  std::vector<Ranch::lex::token> part;
+Ranch::ast::process_model Ranch::ast::astbuilder::build() noexcept {
+  Ranch::ast::process_model processes;
+  Ranch::ast::process_tokens part;
   // If it's true, needs operator.
   // If it's false, needs expression.
   bool _operator = false;
   uint64_t brace_count = 0;
-  std::vector<Ranch::lex::token>::iterator it = this->tokens.begin();
-  std::vector<Ranch::lex::token>::iterator end = this->tokens.end();
+  Ranch::ast::process_tokens::iterator it = this->tokens.begin();
+  Ranch::ast::process_tokens::iterator end = this->tokens.end();
   for (; it < end; ++it) {
     switch ((*it).id) {
     case ID_OPERATOR:
@@ -34,10 +33,10 @@ std::vector<std::vector<Ranch::lex::token>> Ranch::ast::astbuilder::build() noex
         continue;
       }
       processes.push_back(part);
-      std::vector<Ranch::lex::token> operator_vector;
+      Ranch::ast::process_tokens operator_vector;
       operator_vector.push_back(*it);
       processes.push_back(operator_vector);
-      part = std::vector<Ranch::lex::token>();
+      part = Ranch::ast::process_tokens();
       continue;
     }
     if (_operator && brace_count == 0) {
