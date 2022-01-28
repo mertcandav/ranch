@@ -24,6 +24,8 @@ value *value_new(void);
 // Free value instance allocated from heap.
 void value_free(value *val);
 void value_print(const value *val);
+// Frees destination value and set instead src.
+void value_repl(value *dest, value *src);
 
 #ifdef __cplusplus
 }

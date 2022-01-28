@@ -132,7 +132,7 @@ long long next_operator(Ranch::ast::process_model processes) noexcept {
 }
 
 value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept {
-  value* val = value_new();
+  value *val = value_new();
   val->data = std::stod(tokens[0].kind);
   return val;
 }
@@ -156,21 +156,24 @@ value *compute_expr(Ranch::ast::process_model processes) noexcept {
       bop->left = val;
       bop->opr = (wchar_t*)processes[j][0].kind.c_str();
       bop->right = compute_value_part(processes[j+1]);
-      val = binopr_solve(bop);
+      value_repl(val, binopr_solve(bop));
+      value_free(bop->right);
       erase_processes(processes, 0, 2);
       goto end;
     } else if (j == processes.size()-1) {
       bop->opr = (wchar_t*)processes[j][0].kind.c_str();
       bop->left = compute_value_part(processes[j-1]);
       bop->right = val;
-      val = binopr_solve(bop);
+      value_repl(val, binopr_solve(bop));
+      value_free(bop->left);
       erase_processes(processes, j-1, processes.size());
       goto end;
     } else if (processes[j-1][0].id == ID_OPERATOR && processes[j-1].size() == 1) {
       bop->left = val;
       bop->opr = (wchar_t*)processes[j][0].kind.c_str();
       bop->right = compute_value_part(processes[j+1]);
-      val = binopr_solve(bop);
+      value_repl(val, binopr_solve(bop));
+      value_free(bop->right);
       erase_processes(processes, j+2, j);
       goto end;
     }
@@ -179,11 +182,14 @@ value *compute_expr(Ranch::ast::process_model processes) noexcept {
     bop->right = compute_value_part(processes[j+1]);
     {
       value *solved = binopr_solve(bop);
+      value_free(bop->left);
+      value_free(bop->right);
       if (val != nullptr) {
         bop->opr = (wchar_t*)TOKEN_PLUS;
         bop->left = val;
         bop->right = solved;
-        val = binopr_solve(bop);
+        value_repl(val, binopr_solve(bop));
+        value_free(solved);
       } else {
         val = solved;
       }

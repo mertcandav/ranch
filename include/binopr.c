@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "binopr.h"
@@ -11,6 +12,10 @@ inline value *solve_minus(binopr *bop);
 
 binopr *binopr_new(void) {
   binopr *bop = (binopr*)calloc(1, sizeof(binopr));
+  if (bop == NULL) {
+    printf("error: memory allocation failed!\n");
+    exit(1);
+  }
   return bop;
 }
 
