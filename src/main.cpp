@@ -128,10 +128,10 @@ long long next_operator(Ranch::ast::process_model processes) noexcept {
          if (first.kind == TOKEN_STAR    ||
              first.kind == TOKEN_SLASH   ||
              first.kind == TOKEN_PERCENT ||
-             first.kind == TOKEN_CARET   ||
              first.kind == TOKEN_PERCENT) { precedence5 = index; }
-    else if (first.kind == TOKEN_PLUS ||
-             first.kind == TOKEN_MINUS)   { precedence4 = index; }
+    else if (first.kind == TOKEN_PLUS  ||
+             first.kind == TOKEN_MINUS ||
+             first.kind == TOKEN_CARET)   { precedence4 = index; }
   }
        if (precedence5 != -1) { return precedence5; }
   else if (precedence4 != -1) { return precedence4; }
