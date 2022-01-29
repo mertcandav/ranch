@@ -13,6 +13,34 @@ Ranch accepts non-command inputs as expression for compute.
 + `^` Exponentiation.
 + `%` Modulo.
 
+### Precedences
+  <table>
+    <tr>
+      <th>Precedence</th>
+      <th>Operator(s)</th>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>* / %</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>+ - ^</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>N/A</td>
+    </tr>
+  </table>
+
 ## Exmaples
 
 ```
