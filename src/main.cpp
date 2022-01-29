@@ -5,8 +5,9 @@
 #include <locale>
 #include <vector>
 
+#include "binopr_events.h"
 #include "../include/binopr.h"
-#include "../include/errors.h"
+#include "../include/messages.h"
 #include "../include/ranch.h"
 #include "../include/value.h"
 #include "../include/ast/ast.hpp"
@@ -16,8 +17,9 @@
 #include "../include/lex/token.hpp"
 #include "../include/lex/tokens.h"
 #include "../include/strings/strings.hpp"
+#include "../include/terminal/ansi.h"
+#include "../include/terminal/log.h"
 #include "../include/terminal/terminal.hpp"
-#include "../include/terminal/ansi/ansi.h"
 #include "../include/terminal/commands/commands.hpp"
 
 #define IS_COMMAND(cmd) cmd[0] == TOKEN_COLON[0]
@@ -45,7 +47,7 @@ void erase_processes(Ranch::ast::process_model& model, long long start, long lon
 
 void command_help(const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(ERR_COMMAND_NOTALONE);
+    LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
   std::wcout
@@ -59,7 +61,7 @@ void command_help(const std::wstring cmd) noexcept {
 
 void command_exit(const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(ERR_COMMAND_NOTALONE);
+    LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
   std::exit(0);
@@ -67,7 +69,7 @@ void command_exit(const std::wstring cmd) noexcept {
 
 void command_about(const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(ERR_COMMAND_NOTALONE);
+    LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
   show_about();
@@ -75,7 +77,7 @@ void command_about(const std::wstring cmd) noexcept {
 
 void command_clear(const std::wstring cmd) noexcept {
   if (cmd != L"") {
-    LOG_ERROR(ERR_COMMAND_NOTALONE);
+    LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
   std::wcout << CLEAR_SCREEN << POSITION_SET(L"0", L"0");
@@ -100,7 +102,7 @@ void process_command(std::wstring cmd) {
   else if (head == COMMAND_EXIT)  { command_exit(cmd); }
   else if (head == COMMAND_ABOUT) { command_about(cmd); }
   else if (head == COMMAND_CLEAR) { command_clear(cmd); }
-  else                            { LOG_ERROR(ERR_NOTEXIST_COMMAND); }
+  else                            { LOG_ERROR(ERROR_NOTEXIST_COMMAND); }
 }
 
 void terminal_loop(std::wstring text) {
@@ -150,8 +152,11 @@ value *compute_expr(Ranch::ast::process_model processes) noexcept {
   if (processes.size() == 1) { return compute_value_part(processes[0]); }
   value *val = nullptr;
   binopr *bop = binopr_new();
+  events_reset();
+  bop->events->failed = &event_failed;
+  bop->events->divied_by_zero = &event_divided_by_zero;
   long long j = next_operator(processes);
-  while (j != -1 && !bop->fail) {
+  while (j != -1 && !bop_failed) {
     if (j == 0) {
       bop->left = val;
       bop->opr = (wchar_t*)processes[j][0].kind.c_str();
@@ -194,13 +199,14 @@ value *compute_expr(Ranch::ast::process_model processes) noexcept {
         val = solved;
       }
     }
-    // Remove computed processes.
     erase_processes(processes, j-1, j+2);
     if (processes.size() == 1) { break; }
   end:
     j = next_operator(processes);
   }
+  expr_events_free(bop->events);
   binopr_free(bop);
+  if (bop_failed) { value_free(val); }
   return val;
 }
 
@@ -215,7 +221,10 @@ void parse_expr(std::wstring text) {
     return;
   }
   value *val = compute_expr(operations);
-  if (val == nullptr) { return; }
+  if (val == nullptr) {
+    if (bop_failed) { LOG_ERROR(ERROR_COMPUTED_FAILED);  }
+    return;
+  }
   value_print(val);
 }
 

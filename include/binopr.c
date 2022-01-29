@@ -5,10 +5,10 @@
 #include "binopr.h"
 #include "lex/tokens.h"
 
-inline value *solve_plus(binopr *bop);
-inline value *solve_minus(binopr *bop);
-inline value *solve_star(binopr *bop);
-inline value *solve_minus(binopr *bop);
+value *solve_plus(const binopr *bop);
+value *solve_minus(const binopr *bop);
+value *solve_star(const binopr *bop);
+value *solve_slash(const binopr *bop);
 
 binopr *binopr_new(void) {
   binopr *bop = (binopr*)calloc(1, sizeof(binopr));
@@ -16,6 +16,13 @@ binopr *binopr_new(void) {
     printf("error: memory allocation failed!\n");
     exit(1);
   }
+  bop->events = (expr_events*)calloc(1, sizeof(expr_events));
+  if (bop->events == NULL) {
+    printf("error: memory allocation failed!\n");
+    exit(1);
+  }
+  bop->left = NULL;
+  bop->right = NULL;
   return bop;
 }
 
@@ -24,27 +31,28 @@ void binopr_free(binopr *bop) {
   bop = NULL;
 }
 
-inline value *solve_plus(binopr *bop) {
+value *solve_plus(const binopr *bop) {
   value *val = value_new();
   val->data = bop->left->data + bop->right->data;
   return val;
 }
 
-inline value *solve_minus(binopr *bop) {
+value *solve_minus(const binopr *bop) {
   value *val = value_new();
   val->data = bop->left->data - bop->right->data;
   return val;
 }
 
-inline value *solve_star(binopr *bop) {
+value *solve_star(const binopr *bop) {
   value *val = value_new();
   val->data = bop->left->data * bop->right->data;
   return val;
 }
 
-inline value *solve_slash(binopr *bop) {
+value *solve_slash(const binopr *bop) {
   value *val = value_new();
   if (bop->left->data == 0 || bop->right->data == 0) {
+    expr_events_invoke(bop->events->divied_by_zero);
     val->data = .0;
     return val;
   }
@@ -57,6 +65,6 @@ value *binopr_solve(binopr *bop) {
   else if (wcscmp(bop->opr, TOKEN_MINUS) == 0) { return solve_minus(bop); }
   else if (wcscmp(bop->opr, TOKEN_STAR) == 0)  { return solve_star(bop); }
   else if (wcscmp(bop->opr, TOKEN_SLASH) == 0) { return solve_slash(bop); }
-  bop->fail = TRUE;
+  expr_events_invoke(bop->events->failed);
   return NULL;
 }

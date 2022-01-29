@@ -5,10 +5,8 @@
 #define __RANCH_TERMINAL 1
 
 #include <iostream>
-#include "ansi/ansi.h"
 
-// Prints error with new line to command-line.
-#define LOG_ERROR(msg) std::wcout << COLOR_RED << msg << FONT_RESET << std::endl
+#include "ansi.h"
 
 #ifdef __WIN32
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004

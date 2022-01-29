@@ -4,6 +4,7 @@
 #ifndef __RANCH_BINOPR
 #define __RANCH_BINOPR 1
 
+#include "eventexpr.h"
 #include "value.h"
 
 #ifdef __cplusplus
@@ -12,10 +13,10 @@ extern "C" {
 
 // Binary operation.
 typedef struct binopr {
-  value      *left;
-  wchar_t    *opr;
-  value      *right;
-  ranch_bool fail;
+  value       *left;
+  wchar_t     *opr;
+  value       *right;
+  expr_events *events;
 } binopr;
 
 // Create new binopr instance allocated from heap.

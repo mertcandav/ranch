@@ -9,6 +9,7 @@ value *value_new(void) {
     printf("error: memory allocation failed!\n");
     exit(1);
   }
+  val->data = 0;
   return val;
 }
 

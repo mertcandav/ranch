@@ -1,6 +1,7 @@
 # Use of this source code is governed by a MIT
 # license that can be found in the LICENSE file.
 
+GCC := gcc
 GPP := g++
 COMPILE := -c
 
@@ -21,10 +22,10 @@ INC_DIR := ./include
 
 # PHONY: clean
 all: depends pack compile
-depends: includes
+depends: includes source
 includes: inc ast lex strings terminal
 inc: inc_headers
-inc_headers: binopr_o value_o
+inc_headers: binopr_o eventexpr_o value_o
 ast: ast_headers
 ast_headers: ast_o asterror_o
 lex: lex_headers
@@ -35,13 +36,17 @@ terminal: commands terminal_headers
 commands: commands_headers
 commands_headers: commands_o
 terminal_headers: terminal_o
-pack: pack_inc pack_ast pack_lex pack_terminal pack_program
+source: binopr_events_o
+pack: pack_inc pack_ast pack_lex pack_terminal pack_src pack_program
 
 binopr_o: $(INC_DIR)/binopr.c $(INC_DIR)/binopr.h
-	$(GPP) $(COMPILE) $< $(OUT) binopr.o
+	$(GCC) $(COMPILE) $< $(OUT) binopr.o
+
+eventexpr_o: $(INC_DIR)/eventexpr.c $(INC_DIR)/eventexpr.h
+	$(GCC) $(COMPILE) $< $(OUT) eventexpr.o
 
 value_o: $(INC_DIR)/value.c $(INC_DIR)/value.h
-	$(GPP) $(COMPILE) $< $(OUT) value.o
+	$(GCC) $(COMPILE) $< $(OUT) value.o
 
 ast_o: $(INC_DIR)/ast/ast.cpp $(INC_DIR)/ast/ast.hpp
 	$(GPP) $(COMPILE) $< $(OUT) ast.o
@@ -64,8 +69,11 @@ commands_o: $(INC_DIR)/terminal/commands/commands.cpp $(INC_DIR)/terminal/comman
 terminal_o: $(INC_DIR)/terminal/terminal.cpp $(INC_DIR)/terminal/terminal.hpp
 	$(GPP) $(COMPILE) $< $(OUT) terminal.o
 
+binopr_events_o: $(SRC_DIR)/binopr_events.c $(SRC_DIR)/binopr_events.h
+	$(GCC) $(COMPILE) $< $(OUT) binopr_events.o
+
 pack_inc:
-	$(LD) $(RELOC) binopr.o value.o $(OUT) $@.o
+	$(LD) $(RELOC) binopr.o eventexpr.o value.o $(OUT) $@.o
 
 pack_ast:
 	$(LD) $(RELOC) ast.o asterror.o $(OUT) $@.o
@@ -76,8 +84,11 @@ pack_lex:
 pack_terminal:
 	$(LD) $(RELOC) terminal.o commands.o $(OUT) $@.o
 
+pack_src:
+	$(LD) $(RELOC) binopr_events.o $(OUT) $@.o
+
 pack_program:
-	$(LD) $(RELOC) pack_inc.o pack_ast.o pack_lex.o pack_terminal.o strings.o $(OUT) $@.o
+	$(LD) $(RELOC) pack_src.o pack_inc.o pack_ast.o pack_lex.o pack_terminal.o strings.o $(OUT) $@.o
 
 compile: $(SRC_DIR)/main.cpp
 	$(GPP) $< pack_program.o $(OUT) $(EXE_OUT_NAME)

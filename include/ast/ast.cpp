@@ -1,5 +1,5 @@
 #include "ast.hpp"
-#include "../errors.h"
+#include "../messages.h"
 #include "../lex/id.h"
 #include "../lex/tokens.h"
 #include "../strings/strings.hpp"
@@ -25,7 +25,7 @@ Ranch::ast::process_model Ranch::ast::astbuilder::build() noexcept {
     switch ((*it).id) {
     case ID_OPERATOR:
       if (!_operator && brace_count == 0) {
-        this->push_error(ERR_OPERATOR_OVERFLOW, *it);
+        this->push_error(ERROR_OPERATOR_OVERFLOW, *it);
       }
       _operator = false;
       if (brace_count > 0) {
@@ -41,14 +41,14 @@ Ranch::ast::process_model Ranch::ast::astbuilder::build() noexcept {
     }
     if (_operator && brace_count == 0) {
       if ((*(it-1)).id == ID_VALUE && (*it).id == ID_VALUE) {
-        this->push_error(ERR_INVALID_SYNTAX, *it);
+        this->push_error(ERROR_INVALID_SYNTAX, *it);
       }
     }
     part.push_back(*it);
     _operator = true;
   }
   if (!_operator) {
-    this->push_error(ERR_OPERATOR_OVERFLOW, *(it-1));
+    this->push_error(ERROR_OPERATOR_OVERFLOW, *(it-1));
     return processes;
   }
   if (part.size() > 0) { processes.push_back(part); }

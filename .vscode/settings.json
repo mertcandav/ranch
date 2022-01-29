@@ -40,6 +40,8 @@
     "sstream": "cpp",
     "stdexcept": "cpp",
     "streambuf": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "value.h": "c",
+    "binopr_events.h": "c"
   }
 }
