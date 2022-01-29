@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include "asterror.hpp"
+#include "asterror.h"
 #include "../lex/token.hpp"
 
 namespace Ranch::ast {
@@ -17,9 +17,9 @@ class astbuilder {
 private:
   Ranch::ast::process_tokens tokens;
 
-  inline void push_error(std::wstring msg, Ranch::lex::token token) noexcept;
+  inline void push_error(wchar_t *msg, Ranch::lex::token token) noexcept;
 public:
-  std::vector<Ranch::ast::asterror> errors;
+  std::vector<asterror> errors;
 
   astbuilder(Ranch::ast::process_tokens tokens) noexcept;
   ~astbuilder();

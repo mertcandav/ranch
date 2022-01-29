@@ -27,7 +27,7 @@ includes: inc ast lex strings terminal
 inc: inc_headers
 inc_headers: binopr_o eventexpr_o value_o
 ast: ast_headers
-ast_headers: ast_o asterror_o
+ast_headers: ast_o
 lex: lex_headers
 lex_headers: lexer_o token_o
 strings: strings_headers
@@ -51,9 +51,6 @@ value_o: $(INC_DIR)/value.c $(INC_DIR)/value.h
 ast_o: $(INC_DIR)/ast/ast.cpp $(INC_DIR)/ast/ast.hpp
 	$(GPP) $(COMPILE) $< $(OUT) ast.o
 
-asterror_o: $(INC_DIR)/ast/asterror.cpp $(INC_DIR)/ast/asterror.hpp
-	$(GPP) $(COMPILE) $< $(OUT) asterror.o
-
 lexer_o: $(INC_DIR)/lex/lexer.cpp $(INC_DIR)/lex/lexer.hpp
 	$(GPP) $(COMPILE) $< $(OUT) lexer.o
 
@@ -76,7 +73,7 @@ pack_inc:
 	$(LD) $(RELOC) binopr.o eventexpr.o value.o $(OUT) $@.o
 
 pack_ast:
-	$(LD) $(RELOC) ast.o asterror.o $(OUT) $@.o
+	$(LD) $(RELOC) ast.o $(OUT) $@.o
 
 pack_lex:
 	$(LD) $(RELOC) lexer.o token.o $(OUT) $@.o

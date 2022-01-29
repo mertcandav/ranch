@@ -25,7 +25,7 @@ Ranch::ast::process_model Ranch::ast::astbuilder::build() noexcept {
     switch ((*it).id) {
     case ID_OPERATOR:
       if (!_operator && brace_count == 0) {
-        this->push_error(ERROR_OPERATOR_OVERFLOW, *it);
+        this->push_error((wchar_t*)(ERROR_OPERATOR_OVERFLOW), *it);
       }
       _operator = false;
       if (brace_count > 0) {
@@ -41,14 +41,14 @@ Ranch::ast::process_model Ranch::ast::astbuilder::build() noexcept {
     }
     if (_operator && brace_count == 0) {
       if ((*(it-1)).id == ID_VALUE && (*it).id == ID_VALUE) {
-        this->push_error(ERROR_INVALID_SYNTAX, *it);
+        this->push_error((wchar_t*)(ERROR_INVALID_SYNTAX), *it);
       }
     }
     part.push_back(*it);
     _operator = true;
   }
   if (!_operator) {
-    this->push_error(ERROR_OPERATOR_OVERFLOW, *(it-1));
+    this->push_error((wchar_t*)(ERROR_OPERATOR_OVERFLOW), *(it-1));
     return processes;
   }
   if (part.size() > 0) { processes.push_back(part); }
@@ -56,7 +56,7 @@ Ranch::ast::process_model Ranch::ast::astbuilder::build() noexcept {
 }
 
 inline void Ranch::ast::astbuilder::push_error(
-  std::wstring msg,
+  wchar_t *msg,
   Ranch::lex::token token) noexcept {
-  this->errors.push_back(Ranch::ast::asterror(msg, token.column));
+  this->errors.push_back(asterror{msg, token.column});
 }

@@ -11,7 +11,7 @@
 #include "../include/ranch.h"
 #include "../include/value.h"
 #include "../include/ast/ast.hpp"
-#include "../include/ast/asterror.hpp"
+#include "../include/ast/asterror.h"
 #include "../include/lex/id.h"
 #include "../include/lex/lexer.hpp"
 #include "../include/lex/token.hpp"
@@ -156,7 +156,7 @@ value *compute_expr(Ranch::ast::process_model processes) noexcept {
   bop->events->failed = &event_failed;
   bop->events->divied_by_zero = &event_divided_by_zero;
   long long j = next_operator(processes);
-  while (j != -1 && !bop_failed) {
+  while (j != -1 && !event_logs.bop_failed) {
     if (j == 0) {
       bop->left = val;
       bop->opr = (wchar_t*)processes[j][0].kind.c_str();
@@ -206,7 +206,7 @@ value *compute_expr(Ranch::ast::process_model processes) noexcept {
   }
   expr_events_free(bop->events);
   binopr_free(bop);
-  if (bop_failed) { value_free(val); }
+  if (event_logs.bop_failed) { value_free(val); }
   return val;
 }
 
@@ -217,12 +217,12 @@ void parse_expr(std::wstring text) {
   Ranch::ast::astbuilder ast(tokens);
   Ranch::ast::process_model operations = ast.build();
   if (ast.errors.size() > 0) {
-    for (Ranch::ast::asterror error : ast.errors) { std::wcout << error << std::endl; }
+    for (asterror error : ast.errors) { wprintf(L"Column: %d %ls\n", error.column, error.msg); }
     return;
   }
   value *val = compute_expr(operations);
   if (val == nullptr) {
-    if (bop_failed) { LOG_ERROR(ERROR_COMPUTED_FAILED);  }
+    if (event_logs.bop_failed) { LOG_ERROR(ERROR_COMPUTED_FAILED); }
     return;
   }
   value_print(val);

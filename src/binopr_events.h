@@ -10,7 +10,9 @@ extern "C" {
 
 #include "../include/value.h"
 
-volatile ranch_bool bop_failed;
+struct binopr_event_logs {
+  volatile ranch_bool bop_failed;
+} event_logs;
 
 void events_reset();
 void event_failed(void);
