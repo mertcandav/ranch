@@ -5,10 +5,10 @@
 #include "binopr.h"
 #include "lex/tokens.h"
 
-value *solve_plus(const binopr *bop);
-value *solve_minus(const binopr *bop);
-value *solve_star(const binopr *bop);
-value *solve_slash(const binopr *bop);
+static inline value *solve_plus(const binopr *bop);
+static inline value *solve_minus(const binopr *bop);
+static inline value *solve_star(const binopr *bop);
+static value *solve_slash(const binopr *bop);
 
 binopr *binopr_new(void) {
   binopr *bop = (binopr*)calloc(1, sizeof(binopr));
@@ -31,25 +31,25 @@ void binopr_free(binopr *bop) {
   bop = NULL;
 }
 
-value *solve_plus(const binopr *bop) {
+static inline value *solve_plus(const binopr *bop) {
   value *val = value_new();
   val->data = bop->left->data + bop->right->data;
   return val;
 }
 
-value *solve_minus(const binopr *bop) {
+static inline value *solve_minus(const binopr *bop) {
   value *val = value_new();
   val->data = bop->left->data - bop->right->data;
   return val;
 }
 
-value *solve_star(const binopr *bop) {
+static inline value *solve_star(const binopr *bop) {
   value *val = value_new();
   val->data = bop->left->data * bop->right->data;
   return val;
 }
 
-value *solve_slash(const binopr *bop) {
+static value *solve_slash(const binopr *bop) {
   value *val = value_new();
   if (bop->left->data == 0 || bop->right->data == 0) {
     expr_events_invoke(bop->events->divied_by_zero);
