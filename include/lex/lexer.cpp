@@ -5,7 +5,7 @@
 
 #define LEXING_STOP this->column = -1
 #define LEXING_STOPPED (this->column < 0)
-#define IS_OPERATOR(text, kind) (text.find(kind) == 0)
+#define IS_OPERATOR(text, kind) (!text.find(kind))
 
 Ranch::lex::lexer::lexer(std::wstring text) noexcept {
   this->finished = false;
@@ -75,6 +75,7 @@ bool Ranch::lex::lexer::lex_operator(
   else if (state = IS_OPERATOR(text, TOKEN_MINUS)) { token->kind = TOKEN_MINUS; }
   else if (state = IS_OPERATOR(text, TOKEN_STAR))  { token->kind = TOKEN_STAR; }
   else if (state = IS_OPERATOR(text, TOKEN_SLASH)) { token->kind = TOKEN_SLASH; }
+  else if (state = IS_OPERATOR(text, TOKEN_CARET)) { token->kind = TOKEN_CARET; }
   // If tokenization is success, sets token is an operator.
   if (state) { token->id = ID_OPERATOR; }
   return state;

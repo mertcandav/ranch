@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "binopr.h"
 #include "lex/tokens.h"
@@ -9,6 +10,7 @@ static inline struct value *solve_plus(const struct binopr *bop);
 static inline struct value *solve_minus(const struct binopr *bop);
 static inline struct value *solve_star(const struct binopr *bop);
 static struct value *solve_slash(const struct binopr *bop);
+static inline struct value *solve_exponentiation(const struct binopr *bop);
 
 struct binopr *binopr_new(void) {
   struct binopr *bop = (struct binopr*)calloc(1, sizeof(struct binopr));
@@ -60,11 +62,18 @@ static struct value *solve_slash(const struct binopr *bop) {
   return val;
 }
 
+static inline struct value *solve_exponentiation(const struct binopr *bop) {
+  struct value *val = value_new();
+  val->data = pow(bop->left->data, bop->right->data);
+  return val;
+}
+
 struct value *binopr_solve(struct binopr *bop) {
-       if (wcscmp(bop->opr, TOKEN_PLUS) == 0)  { return solve_plus(bop); }
-  else if (wcscmp(bop->opr, TOKEN_MINUS) == 0) { return solve_minus(bop); }
-  else if (wcscmp(bop->opr, TOKEN_STAR) == 0)  { return solve_star(bop); }
-  else if (wcscmp(bop->opr, TOKEN_SLASH) == 0) { return solve_slash(bop); }
+       if (!wcscmp(bop->opr, TOKEN_PLUS))  { return solve_plus(bop); }
+  else if (!wcscmp(bop->opr, TOKEN_MINUS)) { return solve_minus(bop); }
+  else if (!wcscmp(bop->opr, TOKEN_STAR))  { return solve_star(bop); }
+  else if (!wcscmp(bop->opr, TOKEN_SLASH)) { return solve_slash(bop); }
+  else if (!wcscmp(bop->opr, TOKEN_CARET)) { return solve_exponentiation(bop); }
   expr_events_invoke(bop->events->failed);
   return NULL;
 }

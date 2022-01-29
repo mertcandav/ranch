@@ -27,6 +27,7 @@ extern "C" {
 #define TOKEN_TL L"₺"
 #define TOKEN_LESS L"<"
 #define TOKEN_GREATER L">"
+#define TOKEN_CARET L"^"
 #define TOKEN_QUOTE L"'"
 #define TOKEN_DOUBLE_QUOTE L"\""
 #define TOKEN_LEFT_BRACE L"{"

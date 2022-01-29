@@ -5,11 +5,12 @@ Ranch accepts non-command inputs as expression for compute.
 ## Operators
 
 > Ranch supports process priority.
-> 
+>
 + `+` Addition.
 + `-` Subtraction.
 + `*` Multiplication.
 + `/` Division.
++ `^` Exponentiation.
 
 ## Exmaples
 

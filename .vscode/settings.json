@@ -42,6 +42,8 @@
     "streambuf": "cpp",
     "typeinfo": "cpp",
     "value.h": "c",
-    "binopr_events.h": "c"
+    "binopr_events.h": "c",
+    "binopr.h": "c",
+    "math.h": "c"
   }
 }
