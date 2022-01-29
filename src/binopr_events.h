@@ -17,6 +17,7 @@ struct binopr_event_logs {
 void events_reset();
 void event_failed(void);
 void event_divided_by_zero(void);
+void event_modulo_by_zero(void);
 
 #ifdef __cplusplus
 }

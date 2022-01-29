@@ -12,6 +12,7 @@ extern "C" {
 
 typedef struct expr_events {
   void(*divied_by_zero)(void);
+  void(*modulo_by_zero)(void);
   void(*failed)(void);
 } expr_events;
 

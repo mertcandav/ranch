@@ -71,11 +71,12 @@ bool Ranch::lex::lexer::lex_operator(
   const std::wstring text,
   Ranch::lex::token *token) noexcept {
   bool state = false;
-       if (state = IS_OPERATOR(text, TOKEN_PLUS))  { token->kind = TOKEN_PLUS; }
-  else if (state = IS_OPERATOR(text, TOKEN_MINUS)) { token->kind = TOKEN_MINUS; }
-  else if (state = IS_OPERATOR(text, TOKEN_STAR))  { token->kind = TOKEN_STAR; }
-  else if (state = IS_OPERATOR(text, TOKEN_SLASH)) { token->kind = TOKEN_SLASH; }
-  else if (state = IS_OPERATOR(text, TOKEN_CARET)) { token->kind = TOKEN_CARET; }
+       if (state = IS_OPERATOR(text, TOKEN_PLUS))    { token->kind = TOKEN_PLUS; }
+  else if (state = IS_OPERATOR(text, TOKEN_MINUS))   { token->kind = TOKEN_MINUS; }
+  else if (state = IS_OPERATOR(text, TOKEN_STAR))    { token->kind = TOKEN_STAR; }
+  else if (state = IS_OPERATOR(text, TOKEN_SLASH))   { token->kind = TOKEN_SLASH; }
+  else if (state = IS_OPERATOR(text, TOKEN_CARET))   { token->kind = TOKEN_CARET; }
+  else if (state = IS_OPERATOR(text, TOKEN_PERCENT)) { token->kind = TOKEN_PERCENT; }
   // If tokenization is success, sets token is an operator.
   if (state) { token->id = ID_OPERATOR; }
   return state;

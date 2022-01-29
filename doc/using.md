@@ -11,6 +11,7 @@ Ranch accepts non-command inputs as expression for compute.
 + `*` Multiplication.
 + `/` Division.
 + `^` Exponentiation.
++ `%` Modulo.
 
 ## Exmaples
 

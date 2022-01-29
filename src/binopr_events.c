@@ -19,3 +19,7 @@ void event_failed(void) {
 void event_divided_by_zero(void) {
   LOG_WARNING(WARNING_DIVIDED_BY_ZERO);
 }
+
+void event_modulo_by_zero(void) {
+  LOG_WARNING(WARNING_MODULO_BY_ZERO);
+}

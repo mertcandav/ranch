@@ -17,6 +17,7 @@ extern "C" {
 #define ERROR_COMPUTED_FAILED L"ERROR: Computed failed!"
 
 #define WARNING_DIVIDED_BY_ZERO L"WARN: Divided by zero, result computed as zero!"
+#define WARNING_MODULO_BY_ZERO L"WARN: Modulo by zero, result computed as zero!"
 
 #ifdef __cplusplus
 }

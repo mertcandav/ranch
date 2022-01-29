@@ -125,8 +125,13 @@ long long next_operator(Ranch::ast::process_model processes) noexcept {
          if ((*it).size() != 1)          { continue; }
     else if ((*it)[0].id != ID_OPERATOR) { continue; }
     Ranch::lex::token first = (*it)[0];
-         if (first.kind == TOKEN_STAR || first.kind == TOKEN_SLASH || first.kind == TOKEN_PERCENT || first.kind == TOKEN_CARET) { precedence5 = index; }
-    else if (first.kind == TOKEN_PLUS || first.kind == TOKEN_MINUS)                                                             { precedence4 = index; }
+         if (first.kind == TOKEN_STAR    ||
+             first.kind == TOKEN_SLASH   ||
+             first.kind == TOKEN_PERCENT ||
+             first.kind == TOKEN_CARET   ||
+             first.kind == TOKEN_PERCENT) { precedence5 = index; }
+    else if (first.kind == TOKEN_PLUS ||
+             first.kind == TOKEN_MINUS)   { precedence4 = index; }
   }
        if (precedence5 != -1) { return precedence5; }
   else if (precedence4 != -1) { return precedence4; }
@@ -155,6 +160,7 @@ struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
   events_reset();
   bop->events->failed = &event_failed;
   bop->events->divied_by_zero = &event_divided_by_zero;
+  bop->events->modulo_by_zero = &event_modulo_by_zero;
   long long j = next_operator(processes);
   while (j != -1 && !event_logs.bop_failed) {
     if (j == 0) {
