@@ -5,18 +5,18 @@
 #include "binopr.h"
 #include "lex/tokens.h"
 
-static inline value *solve_plus(const binopr *bop);
-static inline value *solve_minus(const binopr *bop);
-static inline value *solve_star(const binopr *bop);
-static value *solve_slash(const binopr *bop);
+static inline struct value *solve_plus(const struct binopr *bop);
+static inline struct value *solve_minus(const struct binopr *bop);
+static inline struct value *solve_star(const struct binopr *bop);
+static struct value *solve_slash(const struct binopr *bop);
 
-binopr *binopr_new(void) {
-  binopr *bop = (binopr*)calloc(1, sizeof(binopr));
+struct binopr *binopr_new(void) {
+  struct binopr *bop = (struct binopr*)calloc(1, sizeof(struct binopr));
   if (bop == NULL) {
     printf("error: memory allocation failed!\n");
     exit(1);
   }
-  bop->events = (expr_events*)calloc(1, sizeof(expr_events));
+  bop->events = (struct expr_events*)calloc(1, sizeof(struct expr_events));
   if (bop->events == NULL) {
     printf("error: memory allocation failed!\n");
     exit(1);
@@ -26,31 +26,31 @@ binopr *binopr_new(void) {
   return bop;
 }
 
-void binopr_free(binopr *bop) {
+void binopr_free(struct binopr *bop) {
   free(bop);
   bop = NULL;
 }
 
-static inline value *solve_plus(const binopr *bop) {
-  value *val = value_new();
+static inline struct value *solve_plus(const struct binopr *bop) {
+  struct value *val = value_new();
   val->data = bop->left->data + bop->right->data;
   return val;
 }
 
-static inline value *solve_minus(const binopr *bop) {
-  value *val = value_new();
+static inline struct value *solve_minus(const struct binopr *bop) {
+  struct value *val = value_new();
   val->data = bop->left->data - bop->right->data;
   return val;
 }
 
-static inline value *solve_star(const binopr *bop) {
-  value *val = value_new();
+static inline struct value *solve_star(const struct binopr *bop) {
+  struct value *val = value_new();
   val->data = bop->left->data * bop->right->data;
   return val;
 }
 
-static value *solve_slash(const binopr *bop) {
-  value *val = value_new();
+static struct value *solve_slash(const struct binopr *bop) {
+  struct value *val = value_new();
   if (bop->left->data == 0 || bop->right->data == 0) {
     expr_events_invoke(bop->events->divied_by_zero);
     val->data = .0;
@@ -60,7 +60,7 @@ static value *solve_slash(const binopr *bop) {
   return val;
 }
 
-value *binopr_solve(binopr *bop) {
+struct value *binopr_solve(struct binopr *bop) {
        if (wcscmp(bop->opr, TOKEN_PLUS) == 0)  { return solve_plus(bop); }
   else if (wcscmp(bop->opr, TOKEN_MINUS) == 0) { return solve_minus(bop); }
   else if (wcscmp(bop->opr, TOKEN_STAR) == 0)  { return solve_star(bop); }

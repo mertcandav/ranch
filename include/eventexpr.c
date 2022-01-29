@@ -3,8 +3,8 @@
 
 #include "eventexpr.h"
 
-expr_events *eventexpr_new(void) {
-  expr_events *exev = (expr_events*)calloc(1, sizeof(expr_events));
+struct expr_events *eventexpr_new(void) {
+  struct expr_events *exev = (struct expr_events*)calloc(1, sizeof(struct expr_events));
   if (exev == NULL) {
     printf("error: memory allocation failed!\n");
     exit(1);
@@ -14,7 +14,7 @@ expr_events *eventexpr_new(void) {
   return exev;
 }
 
-void expr_events_free(expr_events *exev) {
+void expr_events_free(struct expr_events *exev) {
   free(exev);
   exev = NULL;
 }

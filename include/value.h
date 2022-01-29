@@ -20,12 +20,12 @@ typedef struct value {
 } value;
 
 // Create new value instance allocated from heap.
-value *value_new(void);
+struct value *value_new(void);
 // Free value instance allocated from heap.
-void value_free(value *val);
-void value_print(const value *val);
+void value_free(struct value *val);
+void value_print(const struct value *val);
 // Frees destination value and set instead src.
-void value_repl(value *dest, value *src);
+void value_repl(struct value *dest, struct value *src);
 
 #ifdef __cplusplus
 }

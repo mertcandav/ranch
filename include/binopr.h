@@ -13,17 +13,17 @@ extern "C" {
 
 // Binary operation.
 typedef struct binopr {
-  value       *left;
+  struct value       *left;
   wchar_t     *opr;
-  value       *right;
-  expr_events *events;
+  struct value       *right;
+  struct expr_events *events;
 } binopr;
 
 // Create new binopr instance allocated from heap.
-binopr *binopr_new(void);
+struct binopr *binopr_new(void);
 // Free binopr instance allocated from heap.
-void binopr_free(binopr *bop);
-value *binopr_solve(binopr *bop);
+void binopr_free(struct binopr *bop);
+struct value *binopr_solve(struct binopr *bop);
 
 #ifdef __cplusplus
 }

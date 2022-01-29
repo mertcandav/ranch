@@ -19,7 +19,7 @@ private:
 
   inline void push_error(wchar_t *msg, Ranch::lex::token token) noexcept;
 public:
-  std::vector<asterror> errors;
+  std::vector<struct asterror> errors;
 
   astbuilder(Ranch::ast::process_tokens tokens) noexcept;
   ~astbuilder();

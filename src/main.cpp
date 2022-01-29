@@ -41,8 +41,8 @@ void process_command(std::wstring cmd);
 void terminal_loop(std::string text);
 void parse_expr(std::wstring text);
 long long next_operator(Ranch::ast::process_model processes) noexcept;
-value *compute_expr(Ranch::ast::process_model processes) noexcept;
-value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept;
+struct value *compute_expr(Ranch::ast::process_model processes) noexcept;
+struct value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept;
 void erase_processes(Ranch::ast::process_model& model, long long start, long long end) noexcept;
 
 void command_help(const std::wstring cmd) noexcept {
@@ -133,7 +133,7 @@ long long next_operator(Ranch::ast::process_model processes) noexcept {
   return -1;
 }
 
-value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept {
+struct value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept {
   value *val = value_new();
   val->data = std::stod(tokens[0].kind);
   return val;
@@ -147,7 +147,7 @@ void erase_processes(Ranch::ast::process_model& model, long long start, long lon
   model.erase(model.begin()+start, model.begin()+end);
 }
 
-value *compute_expr(Ranch::ast::process_model processes) noexcept {
+struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
   if (!processes.size()) { return nullptr; }
   if (processes.size() == 1) { return compute_value_part(processes[0]); }
   value *val = nullptr;
