@@ -8,13 +8,18 @@
 extern "C" {
 #endif // __cplusplus
 
-#include "../include/value.h"
+#include "../include/binopr.h"
 
-struct binopr_event_logs {
-  volatile unsigned char bop_failed;
-} event_logs;
+// Binary operation event processor end logger.
+struct binopr_base {
+  volatile unsigned char failed;
+  struct binopr         *bop;
+} bop_base;
 
-void events_reset();
+// Resets everything (frees binopr and events).
+void bopbase_reset(void);
+// Setup bopbase (not resets old, allocates binopr from heap).
+void bopbase_setup(void);
 void event_failed(void);
 void event_divided_by_zero(void);
 void event_modulo_by_zero(void);

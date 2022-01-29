@@ -6,11 +6,17 @@
 #include "binopr.h"
 #include "lex/tokens.h"
 
+// Addition.
 static inline struct value *solve_plus(const struct binopr *bop);
+// Subtraction.
 static inline struct value *solve_minus(const struct binopr *bop);
+// Multiplication.
 static inline struct value *solve_star(const struct binopr *bop);
+// Division.
 static struct value *solve_slash(const struct binopr *bop);
+// Exponentiation (power).
 static inline struct value *solve_exponentiation(const struct binopr *bop);
+// Modulo.
 static struct value *solve_modulo(const struct binopr *bop);
 
 struct binopr *binopr_new(void) {

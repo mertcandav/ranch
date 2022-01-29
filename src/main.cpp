@@ -22,9 +22,6 @@
 #include "../include/terminal/terminal.hpp"
 #include "../include/terminal/commands/commands.hpp"
 
-#define IS_COMMAND(cmd) cmd[0] == TOKEN_COLON[0]
-#define REMOVE_COMMAND_OPERATOR(cmd) Ranch::strings::wleft_trim(cmd.substr(1))
-
 // term is a Ranch::terminal instance allocated from heap.
 // Allocated at entry point (main) function and deleted here.
 // Used to read input from command-line.
@@ -108,8 +105,8 @@ void process_command(std::wstring cmd) {
 void terminal_loop(std::wstring text) {
   text = Ranch::strings::wtrim(text);
   if (text.empty()) { return; }
-  if (IS_COMMAND(text)) {
-    process_command(REMOVE_COMMAND_OPERATOR(text));
+  if (text[0] == TOKEN_COLON[0]) {
+    process_command(Ranch::strings::wleft_trim(text.substr(1)));
     return;
   }
   parse_expr(text);
@@ -155,14 +152,11 @@ void erase_processes(Ranch::ast::process_model& model, long long start, long lon
 struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
   if (!processes.size()) { return nullptr; }
   if (processes.size() == 1) { return compute_value_part(processes[0]); }
-  value *val = nullptr;
-  binopr *bop = binopr_new();
-  events_reset();
-  bop->events->failed = &event_failed;
-  bop->events->divied_by_zero = &event_divided_by_zero;
-  bop->events->modulo_by_zero = &event_modulo_by_zero;
+  bopbase_setup();
+  struct value *val = nullptr;
+  struct binopr *bop = bop_base.bop;
   long long j = next_operator(processes);
-  while (j != -1 && !event_logs.bop_failed) {
+  while (j != -1 && !bop_base.failed) {
     if (j == 0) {
       bop->left = val;
       bop->opr = (wchar_t*)processes[j][0].kind.c_str();
@@ -210,9 +204,8 @@ struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
   end:
     j = next_operator(processes);
   }
-  expr_events_free(bop->events);
-  binopr_free(bop);
-  if (event_logs.bop_failed) { value_free(val); }
+  if (bop_base.failed) { value_free(val); }
+  bopbase_reset();
   return val;
 }
 
@@ -228,7 +221,7 @@ void parse_expr(std::wstring text) {
   }
   value *val = compute_expr(operations);
   if (val == nullptr) {
-    if (event_logs.bop_failed) { LOG_ERROR(ERROR_COMPUTED_FAILED); }
+    if (bop_base.failed) { LOG_ERROR(ERROR_COMPUTED_FAILED); }
     return;
   }
   value_print(val);

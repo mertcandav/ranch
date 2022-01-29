@@ -23,6 +23,7 @@ typedef struct binopr {
 struct binopr *binopr_new(void);
 // Free binopr instance allocated from heap.
 void binopr_free(struct binopr *bop);
+// Solved the binary operation. If have any fail, return NULL.
 struct value *binopr_solve(struct binopr *bop);
 
 #ifdef __cplusplus
