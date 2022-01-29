@@ -7,7 +7,7 @@ struct expr_events *eventexpr_new(void) {
   struct expr_events *exev = (struct expr_events*)calloc(1, sizeof(struct expr_events));
   if (exev == NULL) {
     printf("error: memory allocation failed!\n");
-    exit(1);
+    exit(EXIT_FAILURE);
   }
   exev->divied_by_zero = NULL;
   exev->failed = NULL;

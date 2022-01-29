@@ -8,10 +8,6 @@
 extern "C" {
 #endif // __cplusplus
 
-#define TRUE 1
-#define FALSE 0
-
-typedef unsigned char ranch_bool;
 typedef double ranch_number;
 
 // Computed value piece.

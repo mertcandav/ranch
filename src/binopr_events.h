@@ -11,7 +11,7 @@ extern "C" {
 #include "../include/value.h"
 
 struct binopr_event_logs {
-  volatile ranch_bool bop_failed;
+  volatile unsigned char bop_failed;
 } event_logs;
 
 void events_reset();

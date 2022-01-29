@@ -14,7 +14,7 @@ extern "C" {
 // Binary operation.
 typedef struct binopr {
   struct value       *left;
-  wchar_t     *opr;
+  wchar_t            *opr;
   struct value       *right;
   struct expr_events *events;
 } binopr;

@@ -14,12 +14,12 @@ struct binopr *binopr_new(void) {
   struct binopr *bop = (struct binopr*)calloc(1, sizeof(struct binopr));
   if (bop == NULL) {
     printf("error: memory allocation failed!\n");
-    exit(1);
+    exit(EXIT_FAILURE);
   }
   bop->events = (struct expr_events*)calloc(1, sizeof(struct expr_events));
   if (bop->events == NULL) {
     printf("error: memory allocation failed!\n");
-    exit(1);
+    exit(EXIT_FAILURE);
   }
   bop->left = NULL;
   bop->right = NULL;

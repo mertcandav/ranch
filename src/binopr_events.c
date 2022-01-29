@@ -9,11 +9,11 @@
 #include "../include/terminal/log.h"
 
 void events_reset(void) {
-  event_logs.bop_failed = FALSE;
+  event_logs.bop_failed = 0;
 }
 
 void event_failed(void) {
-  event_logs.bop_failed = TRUE;
+  event_logs.bop_failed = 1;
 }
 
 void event_divided_by_zero(void) {

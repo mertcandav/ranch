@@ -7,7 +7,7 @@ struct value *value_new(void) {
   struct value *val = (struct value*)calloc(1, sizeof(struct value));
   if (val == NULL) {
     printf("error: memory allocation failed!\n");
-    exit(1);
+    exit(EXIT_FAILURE);
   }
   val->data = 0;
   return val;
