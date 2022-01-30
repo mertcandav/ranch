@@ -74,7 +74,7 @@ unsigned char wcs_isnumber(const wchar_t ch) {
 wchar_t *wcssub(const wchar_t *str, int start) {
   wchar_t *sub = NULL;
   const size_t len = wcslen(str)-start;
-  if (len == 0) {
+  if (len < 1) {
     sub = (wchar_t*)(malloc(sizeof(wchar_t)));
     if (!sub) {
       wprintf(ERROR_ALLOCATION_FAILED L"\n");

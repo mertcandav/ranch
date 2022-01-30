@@ -20,7 +20,7 @@ extern "C" {
 #define TOKEN_PLUS L"+"
 #define TOKEN_MINUS L"-"
 #define TOKEN_SLASH L"/"
-#define TOKEN_REVERSE_SLASH L"\""
+#define TOKEN_REVERSE_SLASH L"\\"
 #define TOKEN_PERCENT L"%"
 #define TOKEN_DOLLAR L"$"
 #define TOKEN_EURO L"€"

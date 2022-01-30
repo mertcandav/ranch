@@ -10,6 +10,7 @@ Ranch accepts non-command inputs as expression for compute.
 + `-` Subtraction.
 + `*` Multiplication.
 + `/` Division.
++ `\` Division with greatest.
 + `^` Exponentiation.
 + `%` Modulo.
 
@@ -21,7 +22,7 @@ Ranch accepts non-command inputs as expression for compute.
     </tr>
     <tr>
       <td>5</td>
-      <td>* / %</td>
+      <td>* / \ %</td>
     </tr>
     <tr>
       <td>4</td>

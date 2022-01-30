@@ -72,12 +72,13 @@ bool Ranch::lex::lexer::lex_operator(
   const std::wstring text,
   Ranch::lex::token *token) noexcept {
   bool state = false;
-       if (state = IS_OPERATOR(text, TOKEN_PLUS))    { token->kind = TOKEN_PLUS; }
-  else if (state = IS_OPERATOR(text, TOKEN_MINUS))   { token->kind = TOKEN_MINUS; }
-  else if (state = IS_OPERATOR(text, TOKEN_STAR))    { token->kind = TOKEN_STAR; }
-  else if (state = IS_OPERATOR(text, TOKEN_SLASH))   { token->kind = TOKEN_SLASH; }
-  else if (state = IS_OPERATOR(text, TOKEN_CARET))   { token->kind = TOKEN_CARET; }
-  else if (state = IS_OPERATOR(text, TOKEN_PERCENT)) { token->kind = TOKEN_PERCENT; }
+       if (state = IS_OPERATOR(text, TOKEN_PLUS))          { token->kind = TOKEN_PLUS; }
+  else if (state = IS_OPERATOR(text, TOKEN_MINUS))         { token->kind = TOKEN_MINUS; }
+  else if (state = IS_OPERATOR(text, TOKEN_STAR))          { token->kind = TOKEN_STAR; }
+  else if (state = IS_OPERATOR(text, TOKEN_SLASH))         { token->kind = TOKEN_SLASH; }
+  else if (state = IS_OPERATOR(text, TOKEN_CARET))         { token->kind = TOKEN_CARET; }
+  else if (state = IS_OPERATOR(text, TOKEN_PERCENT))       { token->kind = TOKEN_PERCENT; }
+  else if (state = IS_OPERATOR(text, TOKEN_REVERSE_SLASH)) { token->kind = TOKEN_REVERSE_SLASH; }
   // If tokenization is success, sets token is an operator.
   if (state) { token->id = ID_OPERATOR; }
   return state;
@@ -93,9 +94,9 @@ bool Ranch::lex::lexer::lex_numeric(
     if (text[column] == TOKEN_DOT[0]) {
       if (dotted) {
         this->column += column; // For dot show to error.
-        return false;
+        return 0;
       }
-      dotted = true;
+      dotted = 1;
       text[column] = L','; // For parsing with floating.
       continue;
     }
@@ -104,13 +105,13 @@ bool Ranch::lex::lexer::lex_numeric(
   }
   token->id = ID_VALUE;
   token->kind = text.substr(0, column);
-  return true;
+  return 1;
 }
 
 void Ranch::lex::lexer::error(void) noexcept {
-  wprintf(L"Error on lexing;\nUnexpected token: \"%lc\"\nColumn: %llu\n",
+  wprintf(L"Error on lexing;\nUnexpected token: '%lc'\nColumn: %llu\n",
     this->text[this->column], this->column+1);
-  this->failed = true;
+  this->failed = 1;
   LEXING_STOP;
 }
 
