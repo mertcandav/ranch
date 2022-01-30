@@ -5,6 +5,7 @@
 
 #include "binopr.h"
 #include "lex/tokens.h"
+#include "messages.h"
 
 // Addition.
 static inline struct value *solve_plus(const struct binopr *bop);
@@ -21,13 +22,13 @@ static struct value *solve_modulo(const struct binopr *bop);
 
 struct binopr *binopr_new(void) {
   struct binopr *bop = (struct binopr*)calloc(1, sizeof(struct binopr));
-  if (bop == NULL) {
-    printf("error: memory allocation failed!\n");
+  if (!bop) {
+    wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);
   }
   bop->events = (struct expr_events*)calloc(1, sizeof(struct expr_events));
-  if (bop->events == NULL) {
-    printf("error: memory allocation failed!\n");
+  if (!bop->events) {
+    wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);
   }
   bop->left = NULL;

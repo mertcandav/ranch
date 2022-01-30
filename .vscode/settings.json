@@ -44,6 +44,7 @@
     "value.h": "c",
     "binopr_events.h": "c",
     "binopr.h": "c",
-    "math.h": "c"
+    "math.h": "c",
+    "messages.h": "c"
   }
 }

@@ -66,8 +66,8 @@ strings_o: $(INC_DIR)/strings/strings.cpp $(INC_DIR)/strings/strings.hpp
 commands_o: $(INC_DIR)/terminal/commands/commands.cpp $(INC_DIR)/terminal/commands/commands.cpp
 	$(GPP) $(COMPILE) $< $(OUT) commands.o
 
-terminal_o: $(INC_DIR)/terminal/terminal.cpp $(INC_DIR)/terminal/terminal.hpp
-	$(GPP) $(COMPILE) $< $(OUT) terminal.o
+terminal_o: $(INC_DIR)/terminal/terminal.c $(INC_DIR)/terminal/terminal.h
+	$(GCC) $(COMPILE) $< $(OUT) terminal.o
 
 binopr_events_o: $(SRC_DIR)/binopr_events.c $(SRC_DIR)/binopr_events.h
 	$(GCC) $(COMPILE) $< $(OUT) binopr_events.o

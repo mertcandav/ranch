@@ -10,6 +10,7 @@
 extern "C" {
 #endif // __cplusplus
 
+#define ERROR_ALLOCATION_FAILED L"ERROR: Memory allocation is failed!"
 #define ERROR_NOTEXIST_COMMAND L"ERROR: There is not such command!"
 #define ERROR_COMMAND_NOTALONE L"ERROR: This command is should be single!"
 #define ERROR_OPERATOR_OVERFLOW L"ERROR: Operator overlow!"

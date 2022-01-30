@@ -19,13 +19,13 @@
 #include "../include/strings/strings.hpp"
 #include "../include/terminal/ansi.h"
 #include "../include/terminal/log.h"
-#include "../include/terminal/terminal.hpp"
+#include "../include/terminal/terminal.h"
 #include "../include/terminal/commands/commands.hpp"
 
 // term is a Ranch::terminal instance allocated from heap.
 // Allocated at entry point (main) function and deleted here.
 // Used to read input from command-line.
-Ranch::terminal *term;
+struct terminal *term;
 
 void command_help(const std::wstring cmd) noexcept;
 void command_exit(const std::wstring cmd) noexcept;
@@ -35,7 +35,7 @@ inline void show_about(void) noexcept;
 // Process Ranch terminal command.
 void process_command(std::wstring cmd);
 // Loop of the "term" terminal instance.
-void terminal_loop(std::string text);
+void term_loop(wchar_t *input);
 void parse_expr(std::wstring text);
 long long next_operator(Ranch::ast::process_model processes) noexcept;
 struct value *compute_expr(Ranch::ast::process_model processes) noexcept;
@@ -102,7 +102,10 @@ void process_command(std::wstring cmd) {
   else                            { LOG_ERROR(ERROR_NOTEXIST_COMMAND); }
 }
 
-void terminal_loop(std::wstring text) {
+void term_loop(wchar_t *input) {
+  std::wstring text(input);
+  free(input);
+  input = NULL;
   text = Ranch::strings::wtrim(text);
   if (text.empty()) { return; }
   if (text[0] == TOKEN_COLON[0]) {
@@ -186,7 +189,7 @@ struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
     bop->opr = (wchar_t*)processes[j][0].kind.c_str();
     bop->right = compute_value_part(processes[j+1]);
     {
-      value *solved = binopr_solve(bop);
+      struct value *solved = binopr_solve(bop);
       value_free(bop->left);
       value_free(bop->right);
       if (val != nullptr) {
@@ -229,18 +232,16 @@ void parse_expr(std::wstring text) {
 
 int main(int argc, char **argv) {
 #ifdef __WIN32
-  Ranch::terminal::enable_virtual_terminal_processing();
+  enable_virtual_terminal_processing();
 #endif // __WIN32
   std::setlocale(0x0, ""); // Set locale to all locales.
-  std::wcout << TITLE_SET(L"Ranch " RANCH_VERSION);
-  term = new Ranch::terminal();
-  term->routine_message = L"Ranch";
-  term->sep = TOKEN_GREATER L" ";
+  wprintf(TITLE_SET(L"Ranch " RANCH_VERSION));
+  term = terminal_new();
+  term->routine_message = (wchar_t*)(L"Ranch");
+  term->sep = (wchar_t*)(TOKEN_GREATER L" ");
   // Prints once Ranch opening message at screen.
-  std::wcout << "Ranch CLI Calculator" << std::endl
-             << "Version " << RANCH_VERSION << std::endl
-             << std::endl;
-  term->loop(terminal_loop);
-  delete term;
+  wprintf(L"Ranch CLI Calculator\nVersion " RANCH_VERSION L"\n\n");
+  terminal_loop(term, term_loop);
+  terminal_free(term);
   return 0;
 }
