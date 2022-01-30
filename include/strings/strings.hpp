@@ -12,9 +12,6 @@
 namespace Ranch::strings {
 std::wstring string_to_wide(const std::string str) noexcept;
 std::wstring wleft_trim(std::wstring wstr) noexcept;
-std::wstring wright_trim(std::wstring wstr) noexcept;
-std::wstring wtrim(const std::wstring wstr) noexcept;
-std::wstring to_lower(std::wstring wstr) noexcept;
 } // namespace Ranch::strings
 
 #endif // __RANCH_STRINGSCXX

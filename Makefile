@@ -66,8 +66,8 @@ strings_o: $(INC_DIR)/strings/strings.c $(INC_DIR)/strings/strings.h
 stringsxx_o: $(INC_DIR)/strings/strings.cpp $(INC_DIR)/strings/strings.hpp
 	$(GPP) $(COMPILE) $< $(OUT) stringsxx.o
 
-commands_o: $(INC_DIR)/terminal/commands/commands.cpp $(INC_DIR)/terminal/commands/commands.cpp
-	$(GPP) $(COMPILE) $< $(OUT) commands.o
+commands_o: $(INC_DIR)/terminal/commands/commands.c $(INC_DIR)/terminal/commands/commands.h
+	$(GCC) $(COMPILE) $< $(OUT) commands.o
 
 terminal_o: $(INC_DIR)/terminal/terminal.c $(INC_DIR)/terminal/terminal.h
 	$(GCC) $(COMPILE) $< $(OUT) terminal.o

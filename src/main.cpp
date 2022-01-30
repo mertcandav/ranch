@@ -23,7 +23,7 @@
 #include "../include/terminal/ansi.h"
 #include "../include/terminal/log.h"
 #include "../include/terminal/terminal.h"
-#include "../include/terminal/commands/commands.hpp"
+#include "../include/terminal/commands/commands.h"
 
 // term is a Ranch::terminal instance allocated from heap.
 // Allocated at entry point (main) function and deleted here.
@@ -46,7 +46,7 @@ struct value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept;
 void erase_processes(Ranch::ast::process_model& model, long long start, long long end) noexcept;
 
 void command_help(const wchar_t *cmd) {
-  if (wcslen(cmd)) {
+  if (cmd) {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
@@ -60,7 +60,7 @@ void command_help(const wchar_t *cmd) {
 }
 
 void command_exit(const wchar_t *cmd) {
-  if (wcslen(cmd)) {
+  if (cmd) {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
@@ -68,7 +68,7 @@ void command_exit(const wchar_t *cmd) {
 }
 
 void command_about(const wchar_t *cmd) {
-  if (wcslen(cmd)) {
+  if (cmd) {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
@@ -76,7 +76,7 @@ void command_about(const wchar_t *cmd) {
 }
 
 void command_clear(const wchar_t *cmd) {
-  if (wcslen(cmd)) {
+  if (cmd) {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
@@ -89,16 +89,32 @@ inline void show_about(void) {
 }
 
 void process_command(std::wstring cmd) {
-  if (cmd == L"") { return; }
-  std::wstring head = Ranch::commands::get_head(cmd);
-  head = Ranch::strings::to_lower(head);
-  cmd = Ranch::commands::out_head(cmd);
-  cmd = Ranch::strings::wleft_trim(cmd);
-       if (head == COMMAND_HELP)  { command_help(cmd.c_str()); }
-  else if (head == COMMAND_EXIT)  { command_exit(cmd.c_str()); }
-  else if (head == COMMAND_ABOUT) { command_about(cmd.c_str()); }
-  else if (head == COMMAND_CLEAR) { command_clear(cmd.c_str()); }
-  else                            { LOG_ERROR(ERROR_NOTEXIST_COMMAND); }
+  if (cmd.empty()) { return; }
+  wchar_t *command = (wchar_t*)(cmd.c_str());
+  wchar_t *head = command_gethead(command);
+  if (head) {
+    wcslower(head);
+    command = command_outhead(command);
+    if (command) {
+      wchar_t *untrimmed = command;
+      command = wcsltrim(command);
+      free(untrimmed);
+      untrimmed = NULL;
+    }
+  } else {
+    head = (wchar_t*)(malloc(cmd.size()*sizeof(wchar_t)));
+    wcscpy(head, cmd.c_str());
+    command = NULL;
+  }
+       if (!wcscmp(head, COMMAND_HELP))  { command_help(command); }
+  else if (!wcscmp(head, COMMAND_EXIT))  { command_exit(command); }
+  else if (!wcscmp(head, COMMAND_ABOUT)) { command_about(command); }
+  else if (!wcscmp(head, COMMAND_CLEAR)) { command_clear(command); }
+  else                                   { LOG_ERROR(ERROR_NOTEXIST_COMMAND); }
+  free(head);
+  head = NULL;
+  free(command);
+  command = NULL;
 }
 
 void term_loop(wchar_t *input) {
