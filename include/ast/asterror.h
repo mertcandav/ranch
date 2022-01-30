@@ -15,6 +15,9 @@ typedef struct asterror {
   unsigned long long column;
 } asterror;
 
+// Prints as log the asterror.
+void asterror_print(const struct asterror err);
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus

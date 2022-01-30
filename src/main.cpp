@@ -216,10 +216,10 @@ void parse_expr(std::wstring text) {
   Ranch::ast::astbuilder ast(tokens);
   Ranch::ast::process_model operations = ast.build();
   if (ast.errors.size() > 0) {
-    for (asterror error : ast.errors) { wprintf(L"Column: %d %ls\n", error.column, error.msg); }
+    for (struct asterror error : ast.errors) { asterror_print(error); }
     return;
   }
-  value *val = compute_expr(operations);
+  struct value *val = compute_expr(operations);
   if (val == nullptr) {
     if (bop_base.failed) { LOG_ERROR(ERROR_COMPUTED_FAILED); }
     return;
