@@ -107,9 +107,8 @@ bool Ranch::lex::lexer::lex_numeric(
 }
 
 void Ranch::lex::lexer::error(void) noexcept {
-  std::wcout << L"Error on lexing;" << std::endl
-             << L"Unexpected token: '" << this->text[this->column] << L"'" << std::endl
-             << L"Column: " << this->column+1 << std::endl;
+  wprintf(L"Error on lexing;\nUnexpected token: \"%lc\"\nColumn: %llu\n",
+    this->text[this->column], this->column+1);
   this->failed = true;
   LEXING_STOP;
 }

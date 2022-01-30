@@ -10,7 +10,7 @@
 
 void bopbase_reset(void) {
   bop_base.failed = 0;
-  if (bop_base.bop == NULL) { return; }
+  if (!bop_base.bop) { return; }
   expr_events_free(bop_base.bop->events);
   binopr_free(bop_base.bop);
 }

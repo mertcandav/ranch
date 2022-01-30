@@ -1,6 +1,7 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
+#include <stdlib.h>
 #include <iostream>
 #include <locale>
 #include <vector>
@@ -47,13 +48,13 @@ void command_help(const std::wstring cmd) noexcept {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
-  std::wcout
-    << "COMMAND             DESCRIPTION" << std::endl
-    << "HELP                Show help" << std::endl
-    << "EXIT                Exit Ranch" << std::endl
-    << "ABOUT               Show about of Ranch" << std::endl
-    << "CLEAR               Clear command-line screen" << std::endl
-    << std::endl;
+  printf(
+    "COMMAND             DESCRIPTION\n"
+    "HELP                Show help\n"
+    "EXIT                Exit Ranch\n"
+    "ABOUT               Show about of Ranch\n"
+    "CLEAR               Clear command-line screen\n"
+    "\n");
 }
 
 void command_exit(const std::wstring cmd) noexcept {
@@ -61,7 +62,7 @@ void command_exit(const std::wstring cmd) noexcept {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
-  std::exit(0);
+  exit(EXIT_SUCCESS);
 }
 
 void command_about(const std::wstring cmd) noexcept {
@@ -77,16 +78,12 @@ void command_clear(const std::wstring cmd) noexcept {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
-  std::wcout << CLEAR_SCREEN << POSITION_SET(L"0", L"0");
+  printf(CLEAR_SCREEN POSITION_SET("0", "0"));
 }
 
 inline void show_about(void) noexcept {
-  std::wcout << L"Ranch CLI Calculator" << std::endl
-             << L"Version: " << RANCH_VERSION << std::endl
-             << L"Release: " << RANCH_RELEASE << std::endl
-             << std::endl << "CONTRIBUTE" << std::endl
-             << L"Repository: " << RANCH_REPOSITORY
-             << std::endl << std::endl;
+  printf("Ranch CLI Calculator\nVersion: %s\nRelease: %s\n\nCONTRIBUTE\nRepository: %s\n\n",
+    RANCH_VERSION, RANCH_RELEASE, RANCH_REPOSITORY);
 }
 
 void process_command(std::wstring cmd) {
@@ -139,7 +136,7 @@ long long next_operator(Ranch::ast::process_model processes) noexcept {
 }
 
 struct value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept {
-  value *val = value_new();
+  struct value *val = value_new();
   val->data = std::stod(tokens[0].kind);
   return val;
 }
@@ -223,7 +220,7 @@ void parse_expr(std::wstring text) {
     return;
   }
   struct value *val = compute_expr(operations);
-  if (val == nullptr) {
+  if (!val) {
     if (bop_base.failed) { LOG_ERROR(ERROR_COMPUTED_FAILED); }
     return;
   }
@@ -234,7 +231,7 @@ int main(int argc, char **argv) {
 #ifdef __WIN32
   enable_virtual_terminal_processing();
 #endif // __WIN32
-  std::setlocale(0x0, ""); // Set locale to all locales.
+  setlocale(0x0, ""); // Set locale to all locales.
   wprintf(TITLE_SET(L"Ranch " RANCH_VERSION));
   term = terminal_new();
   term->routine_message = (wchar_t*)(L"Ranch");

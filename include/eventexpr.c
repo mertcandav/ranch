@@ -21,6 +21,6 @@ void expr_events_free(struct expr_events *exev) {
 }
 
 void expr_events_invoke(const void(*e)(void)) {
-  if (e == NULL) { return; }
+  if (!e) { return; }
   (*e)();
 }
