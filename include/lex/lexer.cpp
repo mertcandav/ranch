@@ -1,6 +1,7 @@
 #include "id.h"
 #include "lexer.hpp"
 #include "tokens.h"
+#include "../strings/strings.h"
 #include "../strings/strings.hpp"
 
 #define LEXING_STOP this->column = -1
@@ -55,7 +56,7 @@ end:
 }
 
 void Ranch::lex::lexer::resume(void) noexcept {
-  while (Ranch::strings::is_space(this->text[this->column])) { ++this->column; }
+  while (wcs_isspace(this->text[this->column])) { ++this->column; }
 }
 
 inline void Ranch::lex::lexer::reset(void) noexcept {
@@ -85,7 +86,7 @@ bool Ranch::lex::lexer::lex_operator(
 bool Ranch::lex::lexer::lex_numeric(
   std::wstring text,
   Ranch::lex::token *token) noexcept {
-  if (!Ranch::strings::is_number(text[0])) { return false; }
+  if (!wcs_isnumber(text[0])) { return false; }
   uint64_t column = 0;
   bool dotted = false; // For floated values.
   while (++column < text.length()) {
@@ -98,7 +99,7 @@ bool Ranch::lex::lexer::lex_numeric(
       text[column] = L','; // For parsing with floating.
       continue;
     }
-    if (Ranch::strings::is_number(text[column])) { continue; }
+    if (wcs_isnumber(text[column])) { continue; }
     break;
   }
   token->id = ID_VALUE;

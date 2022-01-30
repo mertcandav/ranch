@@ -2,6 +2,7 @@
 // license that can be found in the LICENSE file.
 
 #include <stdlib.h>
+#include <string.h>
 #include <iostream>
 #include <locale>
 #include <vector>
@@ -17,6 +18,7 @@
 #include "../include/lex/lexer.hpp"
 #include "../include/lex/token.hpp"
 #include "../include/lex/tokens.h"
+#include "../include/strings/strings.h"
 #include "../include/strings/strings.hpp"
 #include "../include/terminal/ansi.h"
 #include "../include/terminal/log.h"
@@ -28,11 +30,11 @@
 // Used to read input from command-line.
 struct terminal *term;
 
-void command_help(const std::wstring cmd) noexcept;
-void command_exit(const std::wstring cmd) noexcept;
-void command_about(const std::wstring cmd) noexcept;
-void command_clear(const std::wstring cmd) noexcept;
-inline void show_about(void) noexcept;
+void command_help(const wchar_t *cmd);
+void command_exit(const wchar_t *cmd);
+void command_about(const wchar_t *cmd);
+void command_clear(const wchar_t *cmd);
+inline void show_about(void);
 // Process Ranch terminal command.
 void process_command(std::wstring cmd);
 // Loop of the "term" terminal instance.
@@ -43,8 +45,8 @@ struct value *compute_expr(Ranch::ast::process_model processes) noexcept;
 struct value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept;
 void erase_processes(Ranch::ast::process_model& model, long long start, long long end) noexcept;
 
-void command_help(const std::wstring cmd) noexcept {
-  if (cmd != L"") {
+void command_help(const wchar_t *cmd) {
+  if (wcslen(cmd)) {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
@@ -57,31 +59,31 @@ void command_help(const std::wstring cmd) noexcept {
     "\n");
 }
 
-void command_exit(const std::wstring cmd) noexcept {
-  if (cmd != L"") {
+void command_exit(const wchar_t *cmd) {
+  if (wcslen(cmd)) {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
   exit(EXIT_SUCCESS);
 }
 
-void command_about(const std::wstring cmd) noexcept {
-  if (cmd != L"") {
+void command_about(const wchar_t *cmd) {
+  if (wcslen(cmd)) {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
   show_about();
 }
 
-void command_clear(const std::wstring cmd) noexcept {
-  if (cmd != L"") {
+void command_clear(const wchar_t *cmd) {
+  if (wcslen(cmd)) {
     LOG_ERROR(ERROR_COMMAND_NOTALONE);
     return;
   }
   printf(CLEAR_SCREEN POSITION_SET("0", "0"));
 }
 
-inline void show_about(void) noexcept {
+inline void show_about(void) {
   printf("Ranch CLI Calculator\nVersion: %s\nRelease: %s\n\nCONTRIBUTE\nRepository: %s\n\n",
     RANCH_VERSION, RANCH_RELEASE, RANCH_REPOSITORY);
 }
@@ -91,25 +93,24 @@ void process_command(std::wstring cmd) {
   std::wstring head = Ranch::commands::get_head(cmd);
   head = Ranch::strings::to_lower(head);
   cmd = Ranch::commands::out_head(cmd);
-  cmd = Ranch::strings::wtrim(cmd);
-       if (head == COMMAND_HELP)  { command_help(cmd); }
-  else if (head == COMMAND_EXIT)  { command_exit(cmd); }
-  else if (head == COMMAND_ABOUT) { command_about(cmd); }
-  else if (head == COMMAND_CLEAR) { command_clear(cmd); }
+  cmd = Ranch::strings::wleft_trim(cmd);
+       if (head == COMMAND_HELP)  { command_help(cmd.c_str()); }
+  else if (head == COMMAND_EXIT)  { command_exit(cmd.c_str()); }
+  else if (head == COMMAND_ABOUT) { command_about(cmd.c_str()); }
+  else if (head == COMMAND_CLEAR) { command_clear(cmd.c_str()); }
   else                            { LOG_ERROR(ERROR_NOTEXIST_COMMAND); }
 }
 
 void term_loop(wchar_t *input) {
-  std::wstring text(input);
+  std::wstring cmd(input);
   free(input);
   input = NULL;
-  text = Ranch::strings::wtrim(text);
-  if (text.empty()) { return; }
-  if (text[0] == TOKEN_COLON[0]) {
-    process_command(Ranch::strings::wleft_trim(text.substr(1)));
+  if (cmd.size() == 0) { return; }
+  if (cmd[0] == TOKEN_COLON[0]) {
+    process_command(Ranch::strings::wleft_trim(cmd.substr(1)));
     return;
   }
-  parse_expr(text);
+  parse_expr(cmd);
 }
 
 long long next_operator(Ranch::ast::process_model processes) noexcept {
@@ -137,7 +138,7 @@ long long next_operator(Ranch::ast::process_model processes) noexcept {
 
 struct value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept {
   struct value *val = value_new();
-  val->data = std::stod(tokens[0].kind);
+  val->data = wcstod(tokens[0].kind.c_str(), NULL);
   return val;
 }
 
@@ -150,23 +151,23 @@ void erase_processes(Ranch::ast::process_model& model, long long start, long lon
 }
 
 struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
-  if (!processes.size()) { return nullptr; }
+  if (!processes.size()) { return NULL; }
   if (processes.size() == 1) { return compute_value_part(processes[0]); }
   bopbase_setup();
-  struct value *val = nullptr;
+  struct value *val = NULL;
   struct binopr *bop = bop_base.bop;
   long long j = next_operator(processes);
   while (j != -1 && !bop_base.failed) {
     if (j == 0) {
       bop->left = val;
-      bop->opr = (wchar_t*)processes[j][0].kind.c_str();
+      bop->opr = (wchar_t*)(processes[j][0].kind.c_str());
       bop->right = compute_value_part(processes[j+1]);
       value_repl(val, binopr_solve(bop));
       value_free(bop->right);
       erase_processes(processes, 0, 2);
       goto end;
     } else if (j == processes.size()-1) {
-      bop->opr = (wchar_t*)processes[j][0].kind.c_str();
+      bop->opr = (wchar_t*)(processes[j][0].kind.c_str());
       bop->left = compute_value_part(processes[j-1]);
       bop->right = val;
       value_repl(val, binopr_solve(bop));
@@ -175,7 +176,7 @@ struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
       goto end;
     } else if (processes[j-1][0].id == ID_OPERATOR && processes[j-1].size() == 1) {
       bop->left = val;
-      bop->opr = (wchar_t*)processes[j][0].kind.c_str();
+      bop->opr = (wchar_t*)(processes[j][0].kind.c_str());
       bop->right = compute_value_part(processes[j+1]);
       value_repl(val, binopr_solve(bop));
       value_free(bop->right);
@@ -183,13 +184,13 @@ struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
       goto end;
     }
     bop->left = compute_value_part(processes[j-1]);
-    bop->opr = (wchar_t*)processes[j][0].kind.c_str();
+    bop->opr = (wchar_t*)(processes[j][0].kind.c_str());
     bop->right = compute_value_part(processes[j+1]);
     {
       struct value *solved = binopr_solve(bop);
       value_free(bop->left);
       value_free(bop->right);
-      if (val != nullptr) {
+      if (val) {
         bop->opr = (wchar_t*)TOKEN_PLUS;
         bop->left = val;
         bop->right = solved;

@@ -31,13 +31,13 @@ ast_headers: ast_o asterror_o
 lex: lex_headers
 lex_headers: lexer_o token_o
 strings: strings_headers
-strings_headers: strings_o
+strings_headers: strings_o stringsxx_o
 terminal: commands terminal_headers
 commands: commands_headers
 commands_headers: commands_o
 terminal_headers: terminal_o
 source: binopr_events_o
-pack: pack_inc pack_ast pack_lex pack_terminal pack_src pack_program
+pack: pack_inc pack_ast pack_lex pack_strings pack_terminal pack_src pack_program
 
 binopr_o: $(INC_DIR)/binopr.c $(INC_DIR)/binopr.h
 	$(GCC) $(COMPILE) $< $(OUT) binopr.o
@@ -60,8 +60,11 @@ lexer_o: $(INC_DIR)/lex/lexer.cpp $(INC_DIR)/lex/lexer.hpp
 token_o: $(INC_DIR)/lex/token.cpp $(INC_DIR)/lex/token.hpp
 	$(GPP) $(COMPILE) $< $(OUT) token.o
 
-strings_o: $(INC_DIR)/strings/strings.cpp $(INC_DIR)/strings/strings.hpp
-	$(GPP) $(COMPILE) $< $(OUT) strings.o
+strings_o: $(INC_DIR)/strings/strings.c $(INC_DIR)/strings/strings.h
+	$(GCC) $(COMPILE) $< $(OUT) strings.o
+
+stringsxx_o: $(INC_DIR)/strings/strings.cpp $(INC_DIR)/strings/strings.hpp
+	$(GPP) $(COMPILE) $< $(OUT) stringsxx.o
 
 commands_o: $(INC_DIR)/terminal/commands/commands.cpp $(INC_DIR)/terminal/commands/commands.cpp
 	$(GPP) $(COMPILE) $< $(OUT) commands.o
@@ -81,6 +84,9 @@ pack_ast:
 pack_lex:
 	$(LD) $(RELOC) lexer.o token.o $(OUT) $@.o
 
+pack_strings:
+	$(LD) $(RELOC) strings.o stringsxx.o $(OUT) $@.o
+
 pack_terminal:
 	$(LD) $(RELOC) terminal.o commands.o $(OUT) $@.o
 
@@ -88,7 +94,7 @@ pack_src:
 	$(LD) $(RELOC) binopr_events.o $(OUT) $@.o
 
 pack_program:
-	$(LD) $(RELOC) pack_src.o pack_inc.o pack_ast.o pack_lex.o pack_terminal.o strings.o $(OUT) $@.o
+	$(LD) $(RELOC) pack_src.o pack_inc.o pack_ast.o pack_lex.o pack_terminal.o pack_strings.o $(OUT) $@.o
 
 compile: $(SRC_DIR)/main.cpp
 	$(GPP) $< pack_program.o $(OUT) $(EXE_OUT_NAME)

@@ -31,15 +31,3 @@ std::wstring Ranch::strings::to_lower(std::wstring wstr) noexcept {
     [](wchar_t wch){ return std::tolower(wch); });
   return wstr;
 }
-
-bool Ranch::strings::is_space(const wchar_t wch) noexcept {
-  return wch == L' '  ||
-         wch == L'\t' ||
-         wch == L'\v' ||
-         wch == L'\r' ||
-         wch == L'\f';
-}
-
-bool Ranch::strings::is_number(const wchar_t wch) noexcept {
-  return wch >= '0' && wch <= '9';
-}

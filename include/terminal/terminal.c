@@ -36,10 +36,33 @@ void terminal_free(struct terminal *term) {
 }
 
 wchar_t *terminal_once(struct terminal *term) {
+  size_t lenmax = 100;
+  wchar_t *line = (wchar_t*)(malloc(lenmax*sizeof(wchar_t)));
+  if(!line) {
+    wprintf(ERROR_ALLOCATION_FAILED L"\n");
+    exit(EXIT_FAILURE);
+  }
+  wchar_t *linep = line;
+  size_t len = lenmax;
   wprintf(L"%ls%ls", term->routine_message, term->sep);
-  wchar_t *input = (wchar_t*)(malloc(3000*sizeof(wchar_t)));
-  scanf("%ls", input);
-  return input;
+  while (1) {
+    int c = fgetwc(stdin);
+    if (c == EOF || c == '\n') { break; }
+    if (--len == 0) {
+      len = lenmax;
+      wchar_t *linen = (wchar_t*)(realloc(linep, lenmax*=2));
+      if (!linen) {
+        free(linep);
+        wprintf(ERROR_ALLOCATION_FAILED L"\n");
+        exit(EXIT_FAILURE);
+      }
+      line = linen + (line - linep);
+      linep = linen;
+    }
+    *line++ = c;
+  }
+  *line = '\0';
+  return linep;
 }
 
 void terminal_loop(struct terminal *term, void(*f)(wchar_t *input)) {
