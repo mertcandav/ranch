@@ -49,8 +49,8 @@ list_o: $(INC_DIR)/list.c $(INC_DIR)/list.h
 value_o: $(INC_DIR)/value.c $(INC_DIR)/value.h
 	$(GCC) $(COMPILE) $< $(OUT) value.o
 
-ast_o: $(INC_DIR)/ast/ast.cpp $(INC_DIR)/ast/ast.hpp
-	$(GPP) $(COMPILE) $< $(OUT) ast.o
+ast_o: $(INC_DIR)/ast/ast.c $(INC_DIR)/ast/ast.h
+	$(GCC) $(COMPILE) $< $(OUT) ast.o
 
 asterror_o: $(INC_DIR)/ast/asterror.c $(INC_DIR)/ast/asterror.h
 	$(GCC) $(COMPILE) $< $(OUT) asterror.o

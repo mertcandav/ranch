@@ -13,7 +13,7 @@
 #include "../include/list.h"
 #include "../include/strings.h"
 #include "../include/value.h"
-#include "../include/ast/ast.hpp"
+#include "../include/ast/ast.h"
 #include "../include/ast/asterror.h"
 #include "../include/lex/id.h"
 #include "../include/lex/lexer.hpp"
@@ -258,18 +258,20 @@ void parse_expr(std::wstring text) {
     free_tokens(tokens);
     return;
   }
-  Ranch::ast::astbuilder ast(tokens);
-  struct list *operations = ast.build();
-  if (ast.errors->used > 0) {
+  struct astbuilder *astb = astbuilder_new(tokens);
+  struct list *operations = astbuilder_build(astb);
+  if (astb->errors->used > 0) {
     free_operations(operations);
     free_tokens(tokens);
-    for (size_t index = 0; index < ast.errors->used; ++index) {
-      struct asterror *err = (struct asterror*)(ast.errors->array[index]);
+    for (size_t index = 0; index < astb->errors->used; ++index) {
+      struct asterror *err = (struct asterror*)(astb->errors->array[index]);
       asterror_print(err);
       asterror_free(err);
     }
+    astbuilder_free(astb);
     return;
   }
+  astbuilder_free(astb);
   struct value *val = compute_expr(operations);
   free_operations(operations);
   free_tokens(tokens);
