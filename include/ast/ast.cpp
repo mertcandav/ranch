@@ -2,7 +2,6 @@
 #include "../messages.h"
 #include "../lex/id.h"
 #include "../lex/tokens.h"
-#include "../strings/strings.hpp"
 
 Ranch::ast::astbuilder::astbuilder(struct list *tokens) noexcept {
   this->errors = list_new(0);
@@ -19,7 +18,7 @@ struct list *Ranch::ast::astbuilder::build() noexcept {
   // If it's true, needs operator.
   // If it's false, needs expression.
   bool _operator = false;
-  uint64_t brace_count = 0;
+  unsigned long long brace_count = 0;
   for (size_t index = 0; index < this->tokens->used; ++index) {
     struct token *tok = (struct token*)(this->tokens->array[index]);
     switch (tok->id) {

@@ -1,5 +1,5 @@
 #include "commands.h"
-#include "../../strings/strings.h"
+#include "../../strings.h"
 
 wchar_t *command_gethead(const wchar_t *cmd) {
   const long long index = wcsfind(cmd, L" ");

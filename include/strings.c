@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "strings.h"
-#include "../messages.h"
+#include "messages.h"
 
 wchar_t *wcsltrim(const wchar_t *str) {
   wchar_t *out = NULL;

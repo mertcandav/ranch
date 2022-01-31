@@ -23,21 +23,19 @@ INC_DIR := ./include
 # PHONY: clean
 all: depends pack compile
 depends: includes source
-includes: inc ast lex strings terminal
+includes: inc ast lex terminal
 inc: inc_headers
-inc_headers: binopr_o eventexpr_o list_o value_o
+inc_headers: binopr_o eventexpr_o list_o strings_o value_o
 ast: ast_headers
 ast_headers: ast_o asterror_o
 lex: lex_headers
 lex_headers: lexer_o token_o
-strings: strings_headers
-strings_headers: strings_o stringsxx_o
 terminal: commands terminal_headers
 commands: commands_headers
 commands_headers: commands_o
 terminal_headers: terminal_o
 source: binopr_events_o
-pack: pack_inc pack_ast pack_lex pack_strings pack_terminal pack_src pack_program
+pack: pack_inc pack_ast pack_lex pack_terminal pack_src pack_program
 
 binopr_o: $(INC_DIR)/binopr.c $(INC_DIR)/binopr.h
 	$(GCC) $(COMPILE) $< $(OUT) binopr.o
@@ -63,11 +61,8 @@ lexer_o: $(INC_DIR)/lex/lexer.cpp $(INC_DIR)/lex/lexer.hpp
 token_o: $(INC_DIR)/lex/token.c $(INC_DIR)/lex/token.h
 	$(GCC) $(COMPILE) $< $(OUT) token.o
 
-strings_o: $(INC_DIR)/strings/strings.c $(INC_DIR)/strings/strings.h
+strings_o: $(INC_DIR)/strings.c $(INC_DIR)/strings.h
 	$(GCC) $(COMPILE) $< $(OUT) strings.o
-
-stringsxx_o: $(INC_DIR)/strings/strings.cpp $(INC_DIR)/strings/strings.hpp
-	$(GPP) $(COMPILE) $< $(OUT) stringsxx.o
 
 commands_o: $(INC_DIR)/terminal/commands/commands.c $(INC_DIR)/terminal/commands/commands.h
 	$(GCC) $(COMPILE) $< $(OUT) commands.o
@@ -79,7 +74,7 @@ binopr_events_o: $(SRC_DIR)/binopr_events.c $(SRC_DIR)/binopr_events.h
 	$(GCC) $(COMPILE) $< $(OUT) binopr_events.o
 
 pack_inc:
-	$(LD) $(RELOC) binopr.o eventexpr.o list.o value.o $(OUT) $@.o
+	$(LD) $(RELOC) binopr.o eventexpr.o list.o strings.o value.o $(OUT) $@.o
 
 pack_ast:
 	$(LD) $(RELOC) ast.o asterror.o $(OUT) $@.o
@@ -97,7 +92,7 @@ pack_src:
 	$(LD) $(RELOC) binopr_events.o $(OUT) $@.o
 
 pack_program:
-	$(LD) $(RELOC) pack_src.o pack_inc.o pack_ast.o pack_lex.o pack_terminal.o pack_strings.o $(OUT) $@.o
+	$(LD) $(RELOC) pack_src.o pack_inc.o pack_ast.o pack_lex.o pack_terminal.o $(OUT) $@.o
 
 compile: $(SRC_DIR)/main.cpp
 	$(GPP) $< pack_program.o $(OUT) $(EXE_OUT_NAME)

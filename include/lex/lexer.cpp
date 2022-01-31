@@ -1,8 +1,7 @@
 #include "id.h"
 #include "lexer.hpp"
 #include "tokens.h"
-#include "../strings/strings.h"
-#include "../strings/strings.hpp"
+#include "../strings.h"
 
 #define LEXING_STOP() this->column = -1
 #define LEXING_STOPPED (this->column < 0)
