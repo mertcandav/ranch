@@ -118,15 +118,19 @@ void process_command(wchar_t *cmd) {
 }
 
 void term_loop(wchar_t *input) {
-  std::wstring cmd(input);
-  free(input);
-  input = NULL;
-  if (cmd.size() == 0) { return; }
-  if (cmd[0] == TOKEN_COLON[0]) {
-    process_command((wchar_t*)(Ranch::strings::wleft_trim(cmd.substr(1)).c_str()));
+  if (wcslen(input) == 0) { return; }
+  if (input[0] == TOKEN_COLON[0]) {
+    wchar_t *cmd = wcsltrim(input+1);
+    free(input);
+    input = NULL;
+    process_command(cmd);
+    free(cmd);
+    cmd = NULL;
     return;
   }
-  parse_expr(cmd);
+  parse_expr(std::wstring(input));
+  free(input);
+  input = NULL;
 }
 
 long long next_operator(const struct list *processes) noexcept {

@@ -25,7 +25,8 @@ wchar_t *wcsltrim(const wchar_t *str) {
     wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);
   }
-  wcsncpy(out, &str[index], len);
+  wcscpy(out, &str[index]);
+  out[len+1] = L'\0';
   return out;
 }
 
@@ -49,6 +50,7 @@ wchar_t *wcsrtrim(const wchar_t *str) {
     exit(EXIT_FAILURE);
   }
   wcsncpy(out, str, index+1);
+  out[index+1] = L'\0';
   return out;
 }
 
@@ -72,7 +74,7 @@ unsigned char wcs_isnumber(const wchar_t ch) {
   return ch >= '0' && ch <= '9';
 }
 
-wchar_t *wcssub(const wchar_t *str, const int start) {
+wchar_t *wcssub(const wchar_t *str, int start) {
   wchar_t *sub = NULL;
   const size_t len = wcslen(str)-start;
   if (len < 1) {
@@ -89,12 +91,12 @@ wchar_t *wcssub(const wchar_t *str, const int start) {
     wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);
   }
-  wcsncpy(sub, &str[start], len);
+  wcscpy(sub, &str[start]);
   sub[len+1] = L'\0';
   return sub;
 }
 
-wchar_t *wcsnsub(const wchar_t *str, const int start, const int n) {
+wchar_t *wcsnsub(const wchar_t *str, int start, int n) {
   wchar_t *sub;
   if (n < 1) { goto empty; }
   const size_t len = wcslen(str)-start;
@@ -104,7 +106,7 @@ wchar_t *wcsnsub(const wchar_t *str, const int start, const int n) {
     wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);
   }
-  wcsncpy(sub, &str[start], n);
+  wcscpy(sub, &str[start]);
   sub[n+1] = L'\0';
   return sub;
 empty:

@@ -13,8 +13,8 @@ extern "C" {
 wchar_t *wcsltrim(const wchar_t *str);
 wchar_t *wcsrtrim(const wchar_t *str);
 wchar_t *wcstrim(const wchar_t *str);
-wchar_t *wcssub(const wchar_t *str, const int start);
-wchar_t *wcsnsub(const wchar_t *str, const int start, const int n);
+wchar_t *wcssub(const wchar_t *str, int start);
+wchar_t *wcsnsub(const wchar_t *str, int start, int n);
 unsigned char wcs_isspace(const wchar_t ch);
 unsigned char wcs_isnumber(const wchar_t ch);
 long long wcsfind(const wchar_t *str, const wchar_t *substr);
