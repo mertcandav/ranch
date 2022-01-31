@@ -25,7 +25,7 @@ all: depends pack compile
 depends: includes source
 includes: inc ast lex strings terminal
 inc: inc_headers
-inc_headers: binopr_o eventexpr_o value_o
+inc_headers: binopr_o eventexpr_o list_o value_o
 ast: ast_headers
 ast_headers: ast_o asterror_o
 lex: lex_headers
@@ -44,6 +44,9 @@ binopr_o: $(INC_DIR)/binopr.c $(INC_DIR)/binopr.h
 
 eventexpr_o: $(INC_DIR)/eventexpr.c $(INC_DIR)/eventexpr.h
 	$(GCC) $(COMPILE) $< $(OUT) eventexpr.o
+
+list_o: $(INC_DIR)/list.c $(INC_DIR)/list.h
+	$(GCC) $(COMPILE) $< $(OUT) list.o
 
 value_o: $(INC_DIR)/value.c $(INC_DIR)/value.h
 	$(GCC) $(COMPILE) $< $(OUT) value.o
@@ -76,7 +79,7 @@ binopr_events_o: $(SRC_DIR)/binopr_events.c $(SRC_DIR)/binopr_events.h
 	$(GCC) $(COMPILE) $< $(OUT) binopr_events.o
 
 pack_inc:
-	$(LD) $(RELOC) binopr.o eventexpr.o value.o $(OUT) $@.o
+	$(LD) $(RELOC) binopr.o eventexpr.o list.o value.o $(OUT) $@.o
 
 pack_ast:
 	$(LD) $(RELOC) ast.o asterror.o $(OUT) $@.o

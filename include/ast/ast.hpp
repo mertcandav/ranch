@@ -4,31 +4,27 @@
 #ifndef __RANCH_AST
 #define __RANCH_AST 1
 
-#include <vector>
-
 #include "asterror.h"
+#include "../list.h"
 #include "../lex/token.h"
 
 namespace Ranch::ast {
-typedef std::vector<struct token*> process_tokens;
-typedef std::vector<Ranch::ast::process_tokens> process_model;
-
 class astbuilder {
 private:
-  Ranch::ast::process_tokens tokens;
+  struct list *tokens;
 
-  inline void push_error(wchar_t *msg, struct token *token) noexcept;
+  inline void push_error(wchar_t *msg, const struct token *token) noexcept;
 public:
-  std::vector<struct asterror> errors;
+  struct list *errors;
 
-  astbuilder(Ranch::ast::process_tokens tokens) noexcept;
+  astbuilder(struct list *tokens) noexcept;
   ~astbuilder();
 
   // Builds binary operation AST model.
   // Models like: [[expr], [operator], [expr], [operator], [expr]]
   // If exists any error, pushed to errors.
   // Check errors after build, AST build failed if exist any error.
-  Ranch::ast::process_model build() noexcept;
+  struct list *build() noexcept;
 }; // class astbuilder
 } // namespace Ranch::ast
 

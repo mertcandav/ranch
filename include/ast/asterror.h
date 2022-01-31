@@ -11,12 +11,16 @@ extern "C" {
 #endif // __cplusplus
 
 typedef struct asterror {
-  wchar_t            *msg;
+  wchar_t            *message;
   unsigned long long column;
 } asterror;
 
+// Create new asterror instance allocated from heap.
+struct asterror *asterror_new(void);
+// Free asterror instance allocated from heap.
+void asterror_free(struct asterror *err);
 // Prints as log the asterror.
-void asterror_print(const struct asterror err);
+void asterror_print(const struct asterror *err);
 
 #ifdef __cplusplus
 }

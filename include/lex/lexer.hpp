@@ -5,9 +5,9 @@
 #define __RANCH_LEXER 1
 
 #include <iostream>
-#include <vector>
 
 #include "token.h"
+#include "../list.h"
 
 namespace Ranch::lex {
 class lexer {
@@ -35,7 +35,7 @@ public:
   inline void reset(void) noexcept;
   // Lexs and returns all tokens of text.
   // If exist any tokenization error, prints and stops.
-  std::vector<struct token*> lex(void) noexcept;
+  struct list *lex(void) noexcept;
   // Lexs and returns next token.
   struct token *next(void) noexcept;
   bool ended(void) const noexcept;

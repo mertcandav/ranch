@@ -22,13 +22,13 @@ Ranch::lex::lexer::~lexer() {
   this->finished = false;
 }
 
-std::vector<struct token*> Ranch::lex::lexer::lex(void) noexcept {
+struct list *Ranch::lex::lexer::lex(void) noexcept {
   this->reset();
-  std::vector<struct token*> tokens;
+  struct list *tokens = list_new(0);
   while (!this->finished && !LEXING_STOPPED) {
     struct token *tok = this->next();
     if (tok->id == ID_IGNORE) { continue; }
-    tokens.push_back(tok);
+    list_push(tokens, tok);
   }
   return tokens;
 }
