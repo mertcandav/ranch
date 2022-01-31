@@ -105,13 +105,13 @@ static struct value *solve_reverse_slash(const struct binopr *bop) {
 }
 
 struct value *binopr_solve(struct binopr *bop) {
-       if (!wcscmp(bop->opr, TOKEN_PLUS))          { return solve_plus(bop); }
-  else if (!wcscmp(bop->opr, TOKEN_MINUS))         { return solve_minus(bop); }
-  else if (!wcscmp(bop->opr, TOKEN_STAR))          { return solve_star(bop); }
-  else if (!wcscmp(bop->opr, TOKEN_SLASH))         { return solve_slash(bop); }
-  else if (!wcscmp(bop->opr, TOKEN_CARET))         { return solve_exponentiation(bop); }
-  else if (!wcscmp(bop->opr, TOKEN_PERCENT))       { return solve_modulo(bop); }
-  else if (!wcscmp(bop->opr, TOKEN_REVERSE_SLASH)) { return solve_reverse_slash(bop); }
+       if (wcscmp(bop->opr, TOKEN_PLUS) == 0)          { return solve_plus(bop); }
+  else if (wcscmp(bop->opr, TOKEN_MINUS) == 0)         { return solve_minus(bop); }
+  else if (wcscmp(bop->opr, TOKEN_STAR) == 0)          { return solve_star(bop); }
+  else if (wcscmp(bop->opr, TOKEN_SLASH) == 0)         { return solve_slash(bop); }
+  else if (wcscmp(bop->opr, TOKEN_CARET) == 0)         { return solve_exponentiation(bop); }
+  else if (wcscmp(bop->opr, TOKEN_PERCENT) == 0)       { return solve_modulo(bop); }
+  else if (wcscmp(bop->opr, TOKEN_REVERSE_SLASH) == 0) { return solve_reverse_slash(bop); }
   expr_events_invoke(bop->events->failed);
   return NULL;
 }

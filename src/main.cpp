@@ -88,33 +88,31 @@ inline void show_about(void) {
     RANCH_VERSION, RANCH_RELEASE, RANCH_REPOSITORY);
 }
 
-void process_command(std::wstring cmd) {
-  if (cmd.empty()) { return; }
-  wchar_t *command = (wchar_t*)(cmd.c_str());
-  wchar_t *head = command_gethead(command);
+void process_command(wchar_t *cmd) {
+  if (wcslen(cmd) == 0) { return; }
+  wchar_t *head = command_gethead(cmd);
   if (head) {
     wcslower(head);
-    command = command_outhead(command);
-    if (command) {
-      wchar_t *untrimmed = command;
-      command = wcsltrim(command);
+    cmd = command_outhead(cmd);
+    if (cmd) {
+      wchar_t *untrimmed = cmd;
+      cmd = wcsltrim(cmd);
       free(untrimmed);
       untrimmed = NULL;
     }
   } else {
-    head = (wchar_t*)(malloc(cmd.size()*sizeof(wchar_t)));
-    wcscpy(head, cmd.c_str());
-    command = NULL;
+    head = cmd;
+    cmd = NULL;
   }
-       if (!wcscmp(head, COMMAND_HELP))  { command_help(command); }
-  else if (!wcscmp(head, COMMAND_EXIT))  { command_exit(command); }
-  else if (!wcscmp(head, COMMAND_ABOUT)) { command_about(command); }
-  else if (!wcscmp(head, COMMAND_CLEAR)) { command_clear(command); }
-  else                                   { LOG_ERROR(ERROR_NOTEXIST_COMMAND); }
-  free(head);
-  head = NULL;
-  free(command);
-  command = NULL;
+       if (wcscmp(head, COMMAND_HELP) == 0)  { command_help(cmd); }
+  else if (wcscmp(head, COMMAND_EXIT) == 0)  { command_exit(cmd); }
+  else if (wcscmp(head, COMMAND_ABOUT) == 0) { command_about(cmd); }
+  else if (wcscmp(head, COMMAND_CLEAR) == 0) { command_clear(cmd); }
+  else                                       { LOG_ERROR(ERROR_NOTEXIST_COMMAND); }
+  if (cmd) {
+    free(head);
+    head = NULL;
+  }
 }
 
 void term_loop(wchar_t *input) {
@@ -123,7 +121,7 @@ void term_loop(wchar_t *input) {
   input = NULL;
   if (cmd.size() == 0) { return; }
   if (cmd[0] == TOKEN_COLON[0]) {
-    process_command(Ranch::strings::wleft_trim(cmd.substr(1)));
+    process_command((wchar_t*)(Ranch::strings::wleft_trim(cmd.substr(1)).c_str()));
     return;
   }
   parse_expr(cmd);
@@ -167,7 +165,7 @@ void erase_processes(Ranch::ast::process_model& model, long long start, long lon
 }
 
 struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
-  if (!processes.size()) { return NULL; }
+  if (processes.size() == 0) { return NULL; }
   if (processes.size() == 1) { return compute_value_part(processes[0]); }
   bopbase_setup();
   struct value *val = NULL;

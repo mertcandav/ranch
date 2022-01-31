@@ -4,9 +4,9 @@
 #include "../strings/strings.h"
 #include "../strings/strings.hpp"
 
-#define LEXING_STOP this->column = -1
+#define LEXING_STOP() this->column = -1
 #define LEXING_STOPPED (this->column < 0)
-#define IS_OPERATOR(text, kind) (!text.find(kind))
+#define IS_OPERATOR(text, kind) (text.find(kind) == 0)
 
 Ranch::lex::lexer::lexer(std::wstring text) noexcept {
   this->finished = false;
@@ -112,7 +112,7 @@ void Ranch::lex::lexer::error(void) noexcept {
   wprintf(L"Error on lexing;\nUnexpected token: '%lc'\nColumn: %llu\n",
     this->text[this->column], this->column+1);
   this->failed = 1;
-  LEXING_STOP;
+  LEXING_STOP();
 }
 
 bool Ranch::lex::lexer::fail(void) const noexcept {
