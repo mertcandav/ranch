@@ -57,8 +57,8 @@ asterror_o: $(INC_DIR)/ast/asterror.c $(INC_DIR)/ast/asterror.h
 lexer_o: $(INC_DIR)/lex/lexer.cpp $(INC_DIR)/lex/lexer.hpp
 	$(GPP) $(COMPILE) $< $(OUT) lexer.o
 
-token_o: $(INC_DIR)/lex/token.cpp $(INC_DIR)/lex/token.hpp
-	$(GPP) $(COMPILE) $< $(OUT) token.o
+token_o: $(INC_DIR)/lex/token.c $(INC_DIR)/lex/token.h
+	$(GCC) $(COMPILE) $< $(OUT) token.o
 
 strings_o: $(INC_DIR)/strings/strings.c $(INC_DIR)/strings/strings.h
 	$(GCC) $(COMPILE) $< $(OUT) strings.o

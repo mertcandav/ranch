@@ -22,37 +22,37 @@ Ranch::lex::lexer::~lexer() {
   this->finished = false;
 }
 
-std::vector<Ranch::lex::token> Ranch::lex::lexer::lex(void) noexcept {
+std::vector<struct token*> Ranch::lex::lexer::lex(void) noexcept {
   this->reset();
-  std::vector<Ranch::lex::token> tokens;
+  std::vector<struct token*> tokens;
   while (!this->finished && !LEXING_STOPPED) {
-    Ranch::lex::token token = this->next();
-    if (token.id == ID_IGNORE) { continue; }
-    tokens.push_back(token);
+    struct token *tok = this->next();
+    if (tok->id == ID_IGNORE) { continue; }
+    tokens.push_back(tok);
   }
   return tokens;
 }
 
-Ranch::lex::token Ranch::lex::lexer::next(void) noexcept {
-  Ranch::lex::token token;
+struct token *Ranch::lex::lexer::next(void) noexcept {
+  struct token *tok = token_new(ID_NA, NULL, 0);
   this->resume();
   // If ended after resume?
   if (this->finished = this->column >= this->text.length()) {
-    token.id = ID_IGNORE;
-    return token;
+    tok->id = ID_IGNORE;
+    return tok;
   }
 
-  token.column = this->column + 1; // Increase one for true column value.
+  tok->column = this->column + 1; // Increase one for true column value.
   std::wstring text = this->text.substr(this->column);
 
-  if (this->lex_numeric(text, &token))  { goto end; }
-  if (this->lex_operator(text, &token)) { goto end; }
-  token.id = ID_IGNORE; // Set token as ignored for not appends to tokens.
+  if (this->lex_numeric(text, tok))  { goto end; }
+  if (this->lex_operator(text, tok)) { goto end; }
+  tok->id = ID_IGNORE; // Set token as ignored for not appends to tokens.
   this->error();
-  return token;
+  return tok;
 end:
-  this->column += token.kind.length();
-  return token;
+  this->column += wcslen(tok->kind);
+  return tok;
 }
 
 void Ranch::lex::lexer::resume(void) noexcept {
@@ -70,23 +70,23 @@ bool Ranch::lex::lexer::ended(void) const noexcept {
 
 bool Ranch::lex::lexer::lex_operator(
   const std::wstring text,
-  Ranch::lex::token *token) noexcept {
+  struct token *tok) noexcept {
   bool state = false;
-       if (state = IS_OPERATOR(text, TOKEN_PLUS))          { token->kind = TOKEN_PLUS; }
-  else if (state = IS_OPERATOR(text, TOKEN_MINUS))         { token->kind = TOKEN_MINUS; }
-  else if (state = IS_OPERATOR(text, TOKEN_STAR))          { token->kind = TOKEN_STAR; }
-  else if (state = IS_OPERATOR(text, TOKEN_SLASH))         { token->kind = TOKEN_SLASH; }
-  else if (state = IS_OPERATOR(text, TOKEN_CARET))         { token->kind = TOKEN_CARET; }
-  else if (state = IS_OPERATOR(text, TOKEN_PERCENT))       { token->kind = TOKEN_PERCENT; }
-  else if (state = IS_OPERATOR(text, TOKEN_REVERSE_SLASH)) { token->kind = TOKEN_REVERSE_SLASH; }
+       if (state = IS_OPERATOR(text, TOKEN_PLUS))          { token_setkind(tok, TOKEN_PLUS); }
+  else if (state = IS_OPERATOR(text, TOKEN_MINUS))         { token_setkind(tok, TOKEN_MINUS); }
+  else if (state = IS_OPERATOR(text, TOKEN_STAR))          { token_setkind(tok, TOKEN_STAR); }
+  else if (state = IS_OPERATOR(text, TOKEN_SLASH))         { token_setkind(tok, TOKEN_SLASH); }
+  else if (state = IS_OPERATOR(text, TOKEN_CARET))         { token_setkind(tok, TOKEN_CARET); }
+  else if (state = IS_OPERATOR(text, TOKEN_PERCENT))       { token_setkind(tok, TOKEN_PERCENT); }
+  else if (state = IS_OPERATOR(text, TOKEN_REVERSE_SLASH)) { token_setkind(tok, TOKEN_REVERSE_SLASH); }
   // If tokenization is success, sets token is an operator.
-  if (state) { token->id = ID_OPERATOR; }
+  if (state) { tok->id = ID_OPERATOR; }
   return state;
 }
 
 bool Ranch::lex::lexer::lex_numeric(
   std::wstring text,
-  Ranch::lex::token *token) noexcept {
+  struct token *tok) noexcept {
   if (!wcs_isnumber(text[0])) { return false; }
   uint64_t column = 0;
   bool dotted = false; // For floated values.
@@ -103,8 +103,8 @@ bool Ranch::lex::lexer::lex_numeric(
     if (wcs_isnumber(text[column])) { continue; }
     break;
   }
-  token->id = ID_VALUE;
-  token->kind = text.substr(0, column);
+  tok->id = ID_VALUE;
+  token_setkind(tok, text.substr(0, column).c_str());
   return 1;
 }
 

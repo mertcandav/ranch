@@ -7,17 +7,17 @@
 #include <vector>
 
 #include "asterror.h"
-#include "../lex/token.hpp"
+#include "../lex/token.h"
 
 namespace Ranch::ast {
-typedef std::vector<Ranch::lex::token> process_tokens;
+typedef std::vector<struct token*> process_tokens;
 typedef std::vector<Ranch::ast::process_tokens> process_model;
 
 class astbuilder {
 private:
   Ranch::ast::process_tokens tokens;
 
-  inline void push_error(wchar_t *msg, Ranch::lex::token token) noexcept;
+  inline void push_error(wchar_t *msg, struct token *token) noexcept;
 public:
   std::vector<struct asterror> errors;
 

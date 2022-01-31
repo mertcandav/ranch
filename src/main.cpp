@@ -16,7 +16,7 @@
 #include "../include/ast/asterror.h"
 #include "../include/lex/id.h"
 #include "../include/lex/lexer.hpp"
-#include "../include/lex/token.hpp"
+#include "../include/lex/token.h"
 #include "../include/lex/tokens.h"
 #include "../include/strings/strings.h"
 #include "../include/strings/strings.hpp"
@@ -36,14 +36,15 @@ void command_about(const wchar_t *cmd);
 void command_clear(const wchar_t *cmd);
 inline void show_about(void);
 // Process Ranch terminal command.
-void process_command(std::wstring cmd);
+void process_command(wchar_t *cmd);
 // Loop of the "term" terminal instance.
 void term_loop(wchar_t *input);
 void parse_expr(std::wstring text);
+void free_tokens(Ranch::ast::process_tokens &tokens) noexcept;
 long long next_operator(Ranch::ast::process_model processes) noexcept;
 struct value *compute_expr(Ranch::ast::process_model processes) noexcept;
 struct value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept;
-void erase_processes(Ranch::ast::process_model& model, long long start, long long end) noexcept;
+void erase_processes(Ranch::ast::process_model &model, long long start, long long end) noexcept;
 
 void command_help(const wchar_t *cmd) {
   if (cmd) {
@@ -135,15 +136,15 @@ long long next_operator(Ranch::ast::process_model processes) noexcept {
   for (int index = -1; it < end; ++it) {
     ++index;
          if ((*it).size() != 1)          { continue; }
-    else if ((*it)[0].id != ID_OPERATOR) { continue; }
-    Ranch::lex::token first = (*it)[0];
-         if (first.kind == TOKEN_STAR    ||
-             first.kind == TOKEN_SLASH   ||
-             first.kind == TOKEN_PERCENT ||
-             first.kind == TOKEN_REVERSE_SLASH) { precedence5 = index; }
-    else if (first.kind == TOKEN_PLUS  ||
-             first.kind == TOKEN_MINUS ||
-             first.kind == TOKEN_CARET)         { precedence4 = index; }
+    else if ((*it)[0]->id != ID_OPERATOR) { continue; }
+    const wchar_t *first = (*it)[0]->kind;
+         if (wcscmp(first, TOKEN_STAR) == 0    ||
+             wcscmp(first, TOKEN_SLASH) == 0   ||
+             wcscmp(first, TOKEN_PERCENT) == 0 ||
+             wcscmp(first, TOKEN_REVERSE_SLASH) == 0) { precedence5 = index; }
+    else if (wcscmp(first, TOKEN_PLUS) == 0  ||
+             wcscmp(first, TOKEN_MINUS) == 0 ||
+             wcscmp(first, TOKEN_CARET) == 0)         { precedence4 = index; }
   }
        if (precedence5 != -1) { return precedence5; }
   else if (precedence4 != -1) { return precedence4; }
@@ -152,11 +153,11 @@ long long next_operator(Ranch::ast::process_model processes) noexcept {
 
 struct value *compute_value_part(Ranch::ast::process_tokens tokens) noexcept {
   struct value *val = value_new();
-  val->data = wcstod(tokens[0].kind.c_str(), NULL);
+  val->data = wcstod(tokens[0]->kind, NULL);
   return val;
 }
 
-void erase_processes(Ranch::ast::process_model& model, long long start, long long end) noexcept {
+void erase_processes(Ranch::ast::process_model &model, long long start, long long end) noexcept {
        if (start < 0)    { return; }
   else if (end < start)  { return; }
   else if (start == end) { return; }
@@ -174,23 +175,23 @@ struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
   while (j != -1 && !bop_base.failed) {
     if (j == 0) {
       bop->left = val;
-      bop->opr = (wchar_t*)(processes[j][0].kind.c_str());
+      bop->opr = processes[j][0]->kind;
       bop->right = compute_value_part(processes[j+1]);
       value_repl(val, binopr_solve(bop));
       value_free(bop->right);
       erase_processes(processes, 0, 2);
       goto end;
     } else if (j == processes.size()-1) {
-      bop->opr = (wchar_t*)(processes[j][0].kind.c_str());
+      bop->opr = processes[j][0]->kind;
       bop->left = compute_value_part(processes[j-1]);
       bop->right = val;
       value_repl(val, binopr_solve(bop));
       value_free(bop->left);
       erase_processes(processes, j-1, processes.size());
       goto end;
-    } else if (processes[j-1][0].id == ID_OPERATOR && processes[j-1].size() == 1) {
+    } else if (processes[j-1][0]->id == ID_OPERATOR && processes[j-1].size() == 1) {
       bop->left = val;
-      bop->opr = (wchar_t*)(processes[j][0].kind.c_str());
+      bop->opr = processes[j][0]->kind;
       bop->right = compute_value_part(processes[j+1]);
       value_repl(val, binopr_solve(bop));
       value_free(bop->right);
@@ -198,7 +199,7 @@ struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
       goto end;
     }
     bop->left = compute_value_part(processes[j-1]);
-    bop->opr = (wchar_t*)(processes[j][0].kind.c_str());
+    bop->opr = processes[j][0]->kind;
     bop->right = compute_value_part(processes[j+1]);
     {
       struct value *solved = binopr_solve(bop);
@@ -224,22 +225,34 @@ struct value *compute_expr(Ranch::ast::process_model processes) noexcept {
   return val;
 }
 
+void free_tokens(Ranch::ast::process_tokens &tokens) noexcept {
+  Ranch::ast::process_tokens::iterator it = tokens.begin();
+  const Ranch::ast::process_tokens::iterator end = tokens.end();
+  for (; it < end; ++it) { token_free(*it); }
+}
+
 void parse_expr(std::wstring text) {
   Ranch::lex::lexer lexer(text);
   Ranch::ast::process_tokens tokens = lexer.lex();
-  if (lexer.fail()) { return; }
+  if (lexer.fail()) {
+    free_tokens(tokens);
+    return;
+  }
   Ranch::ast::astbuilder ast(tokens);
   Ranch::ast::process_model operations = ast.build();
   if (ast.errors.size() > 0) {
+    free_tokens(tokens);
     for (struct asterror error : ast.errors) { asterror_print(error); }
     return;
   }
   struct value *val = compute_expr(operations);
+  free_tokens(tokens);
   if (!val) {
     if (bop_base.failed) { LOG_ERROR(ERROR_COMPUTED_FAILED); }
     return;
   }
   value_print(val);
+  value_free(val);
 }
 
 int main(int argc, char **argv) {

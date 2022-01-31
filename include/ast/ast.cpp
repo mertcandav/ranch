@@ -22,7 +22,7 @@ Ranch::ast::process_model Ranch::ast::astbuilder::build() noexcept {
   Ranch::ast::process_tokens::iterator it = this->tokens.begin();
   Ranch::ast::process_tokens::iterator end = this->tokens.end();
   for (; it < end; ++it) {
-    switch ((*it).id) {
+    switch ((*it)->id) {
     case ID_OPERATOR:
       if (!_operator && brace_count == 0) {
         this->push_error((wchar_t*)(ERROR_OPERATOR_OVERFLOW), *it);
@@ -40,7 +40,7 @@ Ranch::ast::process_model Ranch::ast::astbuilder::build() noexcept {
       continue;
     }
     if (_operator && brace_count == 0) {
-      if ((*(it-1)).id == ID_VALUE && (*it).id == ID_VALUE) {
+      if ((*(it-1))->id == ID_VALUE && (*it)->id == ID_VALUE) {
         this->push_error((wchar_t*)(ERROR_INVALID_SYNTAX), *it);
       }
     }
@@ -57,6 +57,6 @@ Ranch::ast::process_model Ranch::ast::astbuilder::build() noexcept {
 
 inline void Ranch::ast::astbuilder::push_error(
   wchar_t *msg,
-  Ranch::lex::token token) noexcept {
-  this->errors.push_back(asterror{msg, token.column});
+  struct token *tok) noexcept {
+  this->errors.push_back(asterror{msg, tok->column});
 }

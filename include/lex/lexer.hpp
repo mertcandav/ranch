@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 
-#include "token.hpp"
+#include "token.h"
 
 namespace Ranch::lex {
 class lexer {
@@ -23,9 +23,9 @@ private:
   // Resume from last column.
   // Skips if starts with spaces or something ignored values.
   void resume(void) noexcept;
-  bool lex_operator(const std::wstring text, Ranch::lex::token *token) noexcept;
-  bool lex_numeric(std::wstring text, Ranch::lex::token *token) noexcept;
-  // Prints error and stops lexing.
+  bool lex_operator(const std::wstring text, struct token *tok) noexcept;
+  bool lex_numeric(std::wstring text, struct token *tok) noexcept;
+  // Prints error and stops lexing and frees generated tokens.
   void error(void) noexcept;
 public:
   lexer(std::wstring text) noexcept;
@@ -35,9 +35,9 @@ public:
   inline void reset(void) noexcept;
   // Lexs and returns all tokens of text.
   // If exist any tokenization error, prints and stops.
-  std::vector<Ranch::lex::token> lex(void) noexcept;
+  std::vector<struct token*> lex(void) noexcept;
   // Lexs and returns next token.
-  Ranch::lex::token next(void) noexcept;
+  struct token *next(void) noexcept;
   bool ended(void) const noexcept;
   // Returns lexing failed or not.
   bool fail(void) const noexcept;
