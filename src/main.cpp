@@ -165,11 +165,21 @@ void erase_processes(struct list *model, long long start, long long end) noexcep
   else if (end < start)  { return; }
   else if (start == end) { return; }
   if (end > model->used) { end = model->used; }
-  model->used -= end-start;
-  for (size_t index = start; index < end; ++index) {
-    list_free((struct list*)(model->array[index]));
-    model->array[index] = NULL;
-  }
+  struct list *lst = list_new(model->used-(end-start));
+  for (size_t index = 0; index < start; ++index)
+  { list_push(lst, model->array[index]); }
+  for (size_t index = end; index < model->used; ++index)
+  { list_push(lst, model->array[index]); }
+  model->used = lst->used;
+  model->size = lst->size;
+  free(model->array);
+  model->array = NULL;
+  *model = *lst;
+  lst->size = 0;
+  lst->used = 0;
+  lst->array = NULL;
+  free(lst);
+  lst = NULL;
 }
 
 struct value *compute_expr(struct list *processes) noexcept {
