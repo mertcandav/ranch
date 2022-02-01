@@ -1,8 +1,8 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
-#ifndef __RANCH_TERMINAL
-#define __RANCH_TERMINAL 1
+#ifndef __RANCH_TERMINAL_H
+#define __RANCH_TERMINAL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,4 +44,4 @@ void terminal_stop(struct terminal *term);
 }
 #endif // __cplusplus
 
-#endif // __RANCH_TERMINAL
+#endif // __RANCH_TERMINAL_H

@@ -1,9 +1,11 @@
 # Use of this source code is governed by a MIT
 # license that can be found in the LICENSE file.
 
+
 GCC := gcc
 GPP := g++
 COMPILE := -c
+CC = $(GCC) # Used compiler to compile.
 
 LD := ld
 RELOC := -relocatable
@@ -34,44 +36,50 @@ terminal: commands terminal_headers
 commands: commands_headers
 commands_headers: commands_o
 terminal_headers: terminal_o
-source: binopr_events_o
+source: binopr_events_o cli_o expr_o
 pack: pack_inc pack_ast pack_lex pack_terminal pack_src pack_program
 
 binopr_o: $(INC_DIR)/binopr.c $(INC_DIR)/binopr.h
-	$(GCC) $(COMPILE) $< $(OUT) binopr.o
+	$(CC) $(COMPILE) $< $(OUT) binopr.o
 
 eventexpr_o: $(INC_DIR)/eventexpr.c $(INC_DIR)/eventexpr.h
-	$(GCC) $(COMPILE) $< $(OUT) eventexpr.o
+	$(CC) $(COMPILE) $< $(OUT) eventexpr.o
 
 list_o: $(INC_DIR)/list.c $(INC_DIR)/list.h
-	$(GCC) $(COMPILE) $< $(OUT) list.o
+	$(CC) $(COMPILE) $< $(OUT) list.o
 
 value_o: $(INC_DIR)/value.c $(INC_DIR)/value.h
-	$(GCC) $(COMPILE) $< $(OUT) value.o
+	$(CC) $(COMPILE) $< $(OUT) value.o
 
 ast_o: $(INC_DIR)/ast/ast.c $(INC_DIR)/ast/ast.h
-	$(GCC) $(COMPILE) $< $(OUT) ast.o
+	$(CC) $(COMPILE) $< $(OUT) ast.o
 
 asterror_o: $(INC_DIR)/ast/asterror.c $(INC_DIR)/ast/asterror.h
-	$(GCC) $(COMPILE) $< $(OUT) asterror.o
+	$(CC) $(COMPILE) $< $(OUT) asterror.o
 
-lexer_o: $(INC_DIR)/lex/lexer.cpp $(INC_DIR)/lex/lexer.hpp
-	$(GPP) $(COMPILE) $< $(OUT) lexer.o
+lexer_o: $(INC_DIR)/lex/lexer.c $(INC_DIR)/lex/lexer.h
+	$(CC) $(COMPILE) $< $(OUT) lexer.o
 
 token_o: $(INC_DIR)/lex/token.c $(INC_DIR)/lex/token.h
-	$(GCC) $(COMPILE) $< $(OUT) token.o
+	$(CC) $(COMPILE) $< $(OUT) token.o
 
 strings_o: $(INC_DIR)/strings.c $(INC_DIR)/strings.h
-	$(GCC) $(COMPILE) $< $(OUT) strings.o
+	$(CC) $(COMPILE) $< $(OUT) strings.o
 
 commands_o: $(INC_DIR)/terminal/commands/commands.c $(INC_DIR)/terminal/commands/commands.h
-	$(GCC) $(COMPILE) $< $(OUT) commands.o
+	$(CC) $(COMPILE) $< $(OUT) commands.o
 
 terminal_o: $(INC_DIR)/terminal/terminal.c $(INC_DIR)/terminal/terminal.h
-	$(GCC) $(COMPILE) $< $(OUT) terminal.o
+	$(CC) $(COMPILE) $< $(OUT) terminal.o
 
 binopr_events_o: $(SRC_DIR)/binopr_events.c $(SRC_DIR)/binopr_events.h
-	$(GCC) $(COMPILE) $< $(OUT) binopr_events.o
+	$(CC) $(COMPILE) $< $(OUT) binopr_events.o
+
+cli_o: $(SRC_DIR)/cli.c $(SRC_DIR)/cli.h
+	$(CC) $(COMPILE) $< $(OUT) cli.o
+
+expr_o: $(SRC_DIR)/expr.c $(SRC_DIR)/expr.h
+	$(CC) $(COMPILE) $< $(OUT) expr.o
 
 pack_inc:
 	$(LD) $(RELOC) binopr.o eventexpr.o list.o strings.o value.o $(OUT) $@.o
@@ -89,12 +97,12 @@ pack_terminal:
 	$(LD) $(RELOC) terminal.o commands.o $(OUT) $@.o
 
 pack_src:
-	$(LD) $(RELOC) binopr_events.o $(OUT) $@.o
+	$(LD) $(RELOC) binopr_events.o cli.o expr.o $(OUT) $@.o
 
 pack_program:
 	$(LD) $(RELOC) pack_src.o pack_inc.o pack_ast.o pack_lex.o pack_terminal.o $(OUT) $@.o
 
-compile: $(SRC_DIR)/main.cpp
+compile: $(SRC_DIR)/main.c
 	$(GPP) $< pack_program.o $(OUT) $(EXE_OUT_NAME)
 
 clean:

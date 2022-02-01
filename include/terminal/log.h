@@ -1,8 +1,8 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
-#ifndef __RANCH_LOG
-#define __RANCH_LOG 1
+#ifndef __RANCH_LOG_H
+#define __RANCH_LOG_H
 
 #include <stdio.h>
 
@@ -19,4 +19,4 @@ extern "C" {
 }
 #endif // __cplusplus
 
-#endif // __RANCH_LOG
+#endif // __RANCH_LOG_H

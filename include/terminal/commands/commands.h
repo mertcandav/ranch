@@ -1,11 +1,11 @@
-#ifndef __RANCH_COMMANDS
-#define __RANCH_COMMANDS 1
+#ifndef __RANCH_COMMANDS_H
+#define __RANCH_COMMANDS_H
+
+#include <wchar.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
-
-#include <wchar.h>
 
 // Returns head of command.
 // If command is only head, returns NULL.
@@ -18,4 +18,4 @@ wchar_t *command_outhead(const wchar_t *cmd);
 }
 #endif // __cplusplus
 
-#endif // __RANCH_COMMANDS
+#endif // __RANCH_COMMANDS_H

@@ -1,8 +1,8 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
-#ifndef __RANCH_LIST
-#define __RANCH_LIST 1
+#ifndef __RANCH_LIST_H
+#define __RANCH_LIST_H
 
 #include <stdlib.h>
 
@@ -28,4 +28,4 @@ void list_push(struct list *lst, void *item);
 }
 #endif // __cplusplus
 
-#endif // __RANCH_LIST
+#endif // __RANCH_LIST_H

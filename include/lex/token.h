@@ -1,8 +1,10 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
-#ifndef __RANCH_TOKEN
-#define __RANCH_TOKEN 1
+#ifndef __RANCH_TOKEN_H
+#define __RANCH_TOKEN_H
+
+#include <wchar.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,4 +31,4 @@ void token_setkind(struct token *tok, const wchar_t *kind);
 }
 #endif // __cplusplus
 
-#endif // __RANCH_TOKEN
+#endif // __RANCH_TOKEN_H

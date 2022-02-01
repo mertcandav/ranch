@@ -1,8 +1,8 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
-#ifndef __RANCH_ASTERROR
-#define __RANCH_ASTERROR 1
+#ifndef __RANCH_ASTERROR_H
+#define __RANCH_ASTERROR_H
 
 #include <wchar.h>
 
@@ -26,4 +26,4 @@ void asterror_print(const struct asterror *err);
 }
 #endif // __cplusplus
 
-#endif // __RANCH_ASTERROR
+#endif // __RANCH_ASTERROR_H

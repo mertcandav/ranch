@@ -1,8 +1,8 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
-#ifndef __RANCH_EVENTEXPR
-#define __RANCH_EVENTEXPR 1
+#ifndef __RANCH_EVENTEXPR_H
+#define __RANCH_EVENTEXPR_H
 
 #include "value.h"
 
@@ -27,4 +27,4 @@ void expr_events_invoke(const void(*e)(void));
 }
 #endif // __cplusplus
 
-#endif // __RANCH_EVENTEXPR
+#endif // __RANCH_EVENTEXPR_H

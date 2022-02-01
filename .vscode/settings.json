@@ -46,6 +46,11 @@
     "binopr.h": "c",
     "math.h": "c",
     "messages.h": "c",
-    "commands.h": "c"
+    "commands.h": "c",
+    "terminal.h": "c",
+    "strings.h": "c",
+    "stdlib.h": "c",
+    "ansi.h": "c",
+    "log.h": "c"
   }
 }

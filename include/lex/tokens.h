@@ -3,8 +3,8 @@
 
 // This file includes token values.
 
-#ifndef __RANCH_TOKENS
-#define __RANCH_TOKENS 1
+#ifndef __RANCH_TOKENS_H
+#define __RANCH_TOKENS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,4 +44,4 @@ extern "C" {
 }
 #endif // __cplusplus
 
-#endif // __RANCH_TOKENS
+#endif // __RANCH_TOKENS_H

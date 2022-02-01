@@ -3,8 +3,8 @@
 
 // This header includes message defines.
 
-#ifndef __RANCH_ERRORS
-#define __RANCH_ERRORS 1
+#ifndef __RANCH_ERRORS_H
+#define __RANCH_ERRORS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,4 +24,4 @@ extern "C" {
 }
 #endif // __cplusplus
 
-#endif // __RANCH_ERRORS
+#endif // __RANCH_ERRORS_H

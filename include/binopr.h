@@ -1,8 +1,8 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
-#ifndef __RANCH_BINOPR
-#define __RANCH_BINOPR 1
+#ifndef __RANCH_BINOPR_H
+#define __RANCH_BINOPR_H
 
 #include "eventexpr.h"
 #include "value.h"
@@ -30,4 +30,4 @@ struct value *binopr_solve(struct binopr *bop);
 }
 #endif // __cplusplus
 
-#endif // __RANCH_BINOPR
+#endif // __RANCH_BINOPR_H

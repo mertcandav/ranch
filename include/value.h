@@ -1,8 +1,8 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
-#ifndef __RANCH_VALUE
-#define __RANCH_VALUE 1
+#ifndef __RANCH_VALUE_H
+#define __RANCH_VALUE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,4 +27,4 @@ void value_repl(struct value *dest, struct value *src);
 }
 #endif // __cplusplus
 
-#endif // __RANCH_VALUE
+#endif // __RANCH_VALUE_H

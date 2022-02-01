@@ -1,8 +1,8 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
-#ifndef __RANCH_AST
-#define __RANCH_AST 1
+#ifndef __RANCH_AST_H
+#define __RANCH_AST_H
 
 #include "asterror.h"
 #include "../list.h"
@@ -33,4 +33,4 @@ void astbuilder_pusherr(struct astbuilder *astb, struct token *tok, wchar_t *mes
 }
 #endif // __cplusplus
 
-#endif // __RANCH_AST
+#endif // __RANCH_AST_H

@@ -74,7 +74,7 @@ unsigned char wcs_isnumber(const wchar_t ch) {
   return ch >= '0' && ch <= '9';
 }
 
-wchar_t *wcssub(const wchar_t *str, int start) {
+wchar_t *wcssub(const wchar_t *str, const size_t start) {
   wchar_t *sub = NULL;
   const size_t len = wcslen(str)-start;
   if (len < 1) {
@@ -86,28 +86,22 @@ wchar_t *wcssub(const wchar_t *str, int start) {
     sub[0] = L'\0';
     return sub;
   }
-  sub = (wchar_t*)(malloc((len+1)*sizeof(wchar_t)));
-  if (!sub) {
-    wprintf(ERROR_ALLOCATION_FAILED L"\n");
-    exit(EXIT_FAILURE);
-  }
-  wcscpy(sub, &str[start]);
-  sub[len+1] = L'\0';
+  sub = wcsdup(str+start);
   return sub;
 }
 
-wchar_t *wcsnsub(const wchar_t *str, int start, int n) {
+wchar_t *wcsnsub(const wchar_t *str, const size_t start, const size_t n) {
   wchar_t *sub;
   if (n < 1) { goto empty; }
   const size_t len = wcslen(str)-start;
   if (len-n < 0) { goto empty; }
-  sub = (wchar_t*)(malloc((n+1)*sizeof(wchar_t)));
+  sub = (wchar_t*)(malloc((n+sizeof(wchar_t))));
   if (!sub) {
     wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);
   }
-  wcscpy(sub, &str[start]);
-  sub[n+1] = L'\0';
+  wcsncpy(sub, str+start, n);
+  sub[n] = L'\0';
   return sub;
 empty:
   sub = (wchar_t*)(malloc(sizeof(wchar_t)));

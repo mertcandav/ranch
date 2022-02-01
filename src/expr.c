@@ -1,11 +1,4 @@
-// Use of this source code is governed by a MIT
-// license that can be found in the LICENSE file.
-
-#include <stdlib.h>
-#include <string.h>
-#include <iostream>
-#include <locale>
-
+#include "expr.h"
 #include "binopr_events.h"
 #include "../include/binopr.h"
 #include "../include/messages.h"
@@ -16,123 +9,19 @@
 #include "../include/ast/ast.h"
 #include "../include/ast/asterror.h"
 #include "../include/lex/id.h"
-#include "../include/lex/lexer.hpp"
+#include "../include/lex/lexer.h"
 #include "../include/lex/token.h"
 #include "../include/lex/tokens.h"
-#include "../include/terminal/ansi.h"
 #include "../include/terminal/log.h"
-#include "../include/terminal/terminal.h"
-#include "../include/terminal/commands/commands.h"
 
-// term is a Ranch::terminal instance allocated from heap.
-// Allocated at entry point (main) function and deleted here.
-// Used to read input from command-line.
-struct terminal *term;
+static void free_tokens(struct list *tokens);
+static void free_operations(struct list *operations);
+static long long next_operator(const struct list *processes);
+static struct value *compute_expr(struct list *processes);
+static struct value *compute_value_part(struct list *tokens);
+static void erase_processes(struct list *model, long long start, long long end);
 
-void command_help(const wchar_t *cmd);
-void command_exit(const wchar_t *cmd);
-void command_about(const wchar_t *cmd);
-void command_clear(const wchar_t *cmd);
-inline void show_about(void);
-// Process Ranch terminal command.
-void process_command(wchar_t *cmd);
-// Loop of the "term" terminal instance.
-void term_loop(wchar_t *input);
-void parse_expr(std::wstring text);
-void free_tokens(struct list *tokens);
-void free_operations(struct list *operations);
-long long next_operator(const struct list *processes) noexcept;
-struct value *compute_expr(struct list *processes) noexcept;
-struct value *compute_value_part(struct list *tokens) noexcept;
-void erase_processes(struct list *model, long long start, long long end) noexcept;
-
-void command_help(const wchar_t *cmd) {
-  if (cmd) {
-    LOG_ERROR(ERROR_COMMAND_NOTALONE);
-    return;
-  }
-  printf(
-    "COMMAND             DESCRIPTION\n"
-    "HELP                Show help\n"
-    "EXIT                Exit Ranch\n"
-    "ABOUT               Show about of Ranch\n"
-    "CLEAR               Clear command-line screen\n"
-    "\n");
-}
-
-void command_exit(const wchar_t *cmd) {
-  if (cmd) {
-    LOG_ERROR(ERROR_COMMAND_NOTALONE);
-    return;
-  }
-  exit(EXIT_SUCCESS);
-}
-
-void command_about(const wchar_t *cmd) {
-  if (cmd) {
-    LOG_ERROR(ERROR_COMMAND_NOTALONE);
-    return;
-  }
-  show_about();
-}
-
-void command_clear(const wchar_t *cmd) {
-  if (cmd) {
-    LOG_ERROR(ERROR_COMMAND_NOTALONE);
-    return;
-  }
-  printf(CLEAR_SCREEN POSITION_SET("0", "0"));
-}
-
-inline void show_about(void) {
-  printf("Ranch CLI Calculator\nVersion: %s\nRelease: %s\n\nCONTRIBUTE\nRepository: %s\n\n",
-    RANCH_VERSION, RANCH_RELEASE, RANCH_REPOSITORY);
-}
-
-void process_command(wchar_t *cmd) {
-  if (wcslen(cmd) == 0) { return; }
-  wchar_t *head = command_gethead(cmd);
-  if (head) {
-    wcslower(head);
-    cmd = command_outhead(cmd);
-    if (cmd) {
-      wchar_t *untrimmed = cmd;
-      cmd = wcsltrim(cmd);
-      free(untrimmed);
-      untrimmed = NULL;
-    }
-  } else {
-    head = cmd;
-    cmd = NULL;
-  }
-       if (wcscmp(head, COMMAND_HELP) == 0)  { command_help(cmd); }
-  else if (wcscmp(head, COMMAND_EXIT) == 0)  { command_exit(cmd); }
-  else if (wcscmp(head, COMMAND_ABOUT) == 0) { command_about(cmd); }
-  else if (wcscmp(head, COMMAND_CLEAR) == 0) { command_clear(cmd); }
-  else                                       { LOG_ERROR(ERROR_NOTEXIST_COMMAND); }
-  if (cmd) {
-    free(head);
-    head = NULL;
-  }
-}
-
-void term_loop(wchar_t *input) {
-  if (wcslen(input) == 0) { return; }
-  if (input[0] == TOKEN_COLON[0]) {
-    wchar_t *cmd = wcsltrim(input+1);
-    free(input);
-    input = NULL;
-    process_command(cmd);
-    free(cmd);
-    cmd = NULL;
-    return;
-  }
-  parse_expr(std::wstring(input));
-  free(input);
-  input = NULL;
-}
-
-long long next_operator(const struct list *processes) noexcept {
+static long long next_operator(const struct list *processes) {
   long long precedence5 = -1;
   long long precedence4 = -1;
   for (size_t index = 0; index < processes->used; ++index) {
@@ -154,13 +43,13 @@ long long next_operator(const struct list *processes) noexcept {
   return -1;
 }
 
-struct value *compute_value_part(struct list *tokens) noexcept {
+static struct value *compute_value_part(struct list *tokens) {
   struct value *val = value_new();
   val->data = wcstod(((struct token*)(tokens->array[0]))->kind, NULL);
   return val;
 }
 
-void erase_processes(struct list *model, long long start, long long end) noexcept {
+static void erase_processes(struct list *model, long long start, long long end) {
        if (start < 0)    { return; }
   else if (end < start)  { return; }
   else if (start == end) { return; }
@@ -182,7 +71,7 @@ void erase_processes(struct list *model, long long start, long long end) noexcep
   lst = NULL;
 }
 
-struct value *compute_expr(struct list *processes) noexcept {
+static struct value *compute_expr(struct list *processes) {
   if (processes->used == 0) { return NULL; }
   if (processes->used == 1) { return compute_value_part((struct list*)(processes->array[0])); }
   bopbase_setup();
@@ -247,24 +136,25 @@ struct value *compute_expr(struct list *processes) noexcept {
   return val;
 }
 
-void free_tokens(struct list *tokens) {
+static void free_tokens(struct list *tokens) {
   for (size_t index = 0; index < tokens->used; ++index) {
     token_free((struct token*)(tokens->array[index]));
   }
   list_free(tokens);
 }
 
-void free_operations(struct list *operations) {
+static void free_operations(struct list *operations) {
   for (size_t index = 0; index < operations->used; ++index) {
     list_free((struct list*)(operations->array[index]));
   }
   list_free(operations);
 }
 
-void parse_expr(std::wstring text) {
-  Ranch::lex::lexer lexer(text);
-  struct list *tokens = lexer.lex();
-  if (lexer.fail()) {
+void parse_expr(wchar_t *text) {
+  struct lexer *lex = lexer_new(text);
+  struct list *tokens = lexer_lex(lex);
+  lexer_free(lex);
+  if (lex->failed) {
     free_tokens(tokens);
     return;
   }
@@ -291,20 +181,4 @@ void parse_expr(std::wstring text) {
   }
   value_print(val);
   value_free(val);
-}
-
-int main(int argc, char **argv) {
-#ifdef __WIN32
-  enable_virtual_terminal_processing();
-#endif // __WIN32
-  setlocale(0x0, ""); // Set locale to all locales.
-  wprintf(TITLE_SET(L"Ranch " RANCH_VERSION));
-  term = terminal_new();
-  term->routine_message = (wchar_t*)(L"Ranch");
-  term->sep = (wchar_t*)(TOKEN_GREATER L" ");
-  // Prints once Ranch opening message at screen.
-  wprintf(L"Ranch CLI Calculator\nVersion " RANCH_VERSION L"\n\n");
-  terminal_loop(term, term_loop);
-  terminal_free(term);
-  return EXIT_SUCCESS;
 }

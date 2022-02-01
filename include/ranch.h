@@ -3,8 +3,8 @@
 
 // This header includes defines for Ranch distributions.
 
-#ifndef __RANCH
-#define __RANCH 1
+#ifndef __RANCH_H
+#define __RANCH_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,4 +24,4 @@ extern "C" {
 }
 #endif // __cplusplus
 
-#endif // __RANCH
+#endif // __RANCH_H
