@@ -4,6 +4,8 @@
 #ifndef __RANCH_BINOPR_H
 #define __RANCH_BINOPR_H
 
+#include <wchar.h>
+
 #include "eventexpr.h"
 #include "value.h"
 

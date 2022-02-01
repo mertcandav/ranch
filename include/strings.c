@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <wctype.h>
 
 #include "strings.h"
 #include "messages.h"

@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <wchar.h>
 
 #include "binopr.h"
 #include "lex/tokens.h"

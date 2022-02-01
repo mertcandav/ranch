@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <wchar.h>
 
 #include "list.h"
 #include "messages.h"
