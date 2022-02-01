@@ -49,7 +49,7 @@ struct token *lexer_next(struct lexer *lex) {
   struct token *tok = token_new(ID_NA, NULL, 0);
   RESUME();
   // If ended after resume?
-  if (lex->finished = lex->column >= wcslen(lex->text)) {
+  if ((lex->finished = lex->column >= wcslen(lex->text))) {
     tok->id = ID_IGNORE;
     return tok;
   }
@@ -76,13 +76,13 @@ void lexer_reset(struct lexer *lex) {
 
 static unsigned char lex_operator(const wchar_t *text, struct token *tok) {
   unsigned char state = 0;
-       if (state = IS_OPERATOR(text, TOKEN_PLUS))          { token_setkind(tok, TOKEN_PLUS); }
-  else if (state = IS_OPERATOR(text, TOKEN_MINUS))         { token_setkind(tok, TOKEN_MINUS); }
-  else if (state = IS_OPERATOR(text, TOKEN_STAR))          { token_setkind(tok, TOKEN_STAR); }
-  else if (state = IS_OPERATOR(text, TOKEN_SLASH))         { token_setkind(tok, TOKEN_SLASH); }
-  else if (state = IS_OPERATOR(text, TOKEN_CARET))         { token_setkind(tok, TOKEN_CARET); }
-  else if (state = IS_OPERATOR(text, TOKEN_PERCENT))       { token_setkind(tok, TOKEN_PERCENT); }
-  else if (state = IS_OPERATOR(text, TOKEN_REVERSE_SLASH)) { token_setkind(tok, TOKEN_REVERSE_SLASH); }
+       if ((state = IS_OPERATOR(text, TOKEN_PLUS)))          { token_setkind(tok, TOKEN_PLUS); }
+  else if ((state = IS_OPERATOR(text, TOKEN_MINUS)))         { token_setkind(tok, TOKEN_MINUS); }
+  else if ((state = IS_OPERATOR(text, TOKEN_STAR)))          { token_setkind(tok, TOKEN_STAR); }
+  else if ((state = IS_OPERATOR(text, TOKEN_SLASH)))         { token_setkind(tok, TOKEN_SLASH); }
+  else if ((state = IS_OPERATOR(text, TOKEN_CARET)))         { token_setkind(tok, TOKEN_CARET); }
+  else if ((state = IS_OPERATOR(text, TOKEN_PERCENT)))       { token_setkind(tok, TOKEN_PERCENT); }
+  else if ((state = IS_OPERATOR(text, TOKEN_REVERSE_SLASH))) { token_setkind(tok, TOKEN_REVERSE_SLASH); }
   // If tokenization is success, sets token is an operator.
   if (state) { tok->id = ID_OPERATOR; }
   return state;
