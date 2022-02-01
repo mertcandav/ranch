@@ -1,4 +1,4 @@
-name: Linux - Compile
+name: WinNT - Compile
 
 on:
   push:
