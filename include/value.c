@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <wchar.h>
 
 #include "value.h"
 #include "messages.h"
