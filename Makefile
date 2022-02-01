@@ -5,7 +5,7 @@
 GCC := gcc
 GPP := g++
 COMPILE := -c
-CC = $(GCC) # Used compiler to compile.
+CC := $(GCC) # Used compiler to compile.
 
 LD := ld
 RELOC := -relocatable

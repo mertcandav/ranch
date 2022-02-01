@@ -21,7 +21,7 @@ struct expr_events *eventexpr_new(void);
 // Free eventexpr instance allocated from heap.
 void expr_events_free(struct expr_events *exev);
 // Invokes event.
-void expr_events_invoke(const void(*e)(void));
+void expr_events_invoke(void(*e)(void));
 
 #ifdef __cplusplus
 }

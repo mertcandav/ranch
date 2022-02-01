@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <wchar.h>
 
 #include "eventexpr.h"
 #include "messages.h"
@@ -20,7 +21,7 @@ void expr_events_free(struct expr_events *exev) {
   exev = NULL;
 }
 
-void expr_events_invoke(const void(*e)(void)) {
+void expr_events_invoke(void(*e)(void)) {
   if (!e) { return; }
   (*e)();
 }

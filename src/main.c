@@ -39,6 +39,7 @@ void term_loop(wchar_t *input) {
 }
 
 int main(int argc, char **argv) {
+  return 0;
 #ifdef __WIN32
   enable_virtual_terminal_processing();
 #endif // __WIN32
