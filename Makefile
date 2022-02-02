@@ -75,9 +75,9 @@ expr_o: $(SRC_DIR)/expr.c $(SRC_DIR)/expr.h
 	$(CC) $(WALL) $(COMPILE) $< $(OUT) expr.o
 
 compile: $(SRC_DIR)/main.c
-	$(CC) $(LM) $(WALL) $< binopr.o eventexpr.o list.o strings.o value.o \
+	$(CC) $(WALL) $< binopr.o eventexpr.o list.o strings.o value.o \
 		ast.o asterror.o lexer.o token.o commands.o terminal.o \
-		binopr_events.o cli.o expr.o $(OUT) $(EXE_OUT_NAME)
+		binopr_events.o cli.o expr.o $(OUT) $(EXE_OUT_NAME) $(LM)
 
 clean:
 	$(DEL_FILE) *.o
