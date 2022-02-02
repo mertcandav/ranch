@@ -44,7 +44,8 @@ static long long next_operator(const struct list *processes) {
 
 static struct value *compute_value_part(struct list *tokens) {
   struct value *val = value_new();
-  val->data = wcstod(((struct token*)(tokens->array[0]))->kind, NULL);
+  struct token *first_tok = (struct token*)(tokens->array[0]);
+  val->data = wcstod(first_tok->kind, NULL);
   return val;
 }
 

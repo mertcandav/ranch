@@ -3,10 +3,12 @@
 
 GCC := gcc
 GPP := g++
-COMPILE := -c
 CC := $(GCC) # Used compiler to compile.
 
+# FLAGS
+COMPILE := -c
 OUT := -o
+LM := -lm
 
 EXE_OUT_NAME := ranch
 DEL_FILE := rm -f
@@ -74,7 +76,7 @@ expr_o: $(SRC_DIR)/expr.c $(SRC_DIR)/expr.h
 compile: $(SRC_DIR)/main.c
 	$(CC) $< binopr.o eventexpr.o list.o strings.o value.o \
 		ast.o asterror.o lexer.o token.o commands.o terminal.o \
-		binopr_events.o cli.o expr.o -lm $(OUT) $(EXE_OUT_NAME)
+		binopr_events.o cli.o expr.o $(OUT) $(EXE_OUT_NAME) $(LM)
 
 clean:
 	$(DEL_FILE) *.o

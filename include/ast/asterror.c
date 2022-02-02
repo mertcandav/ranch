@@ -20,6 +20,5 @@ void asterror_free(struct asterror *err) {
   err = NULL;
 }
 
-void asterror_print(const struct asterror *err) {
-  wprintf(L"Column: %d %ls\n", err->column, err->message);
-}
+void asterror_print(const struct asterror *err)
+{ wprintf(L"Column: %d %ls\n", err->column, err->message); }

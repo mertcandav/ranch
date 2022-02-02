@@ -20,9 +20,8 @@ void value_free(struct value *val) {
   val = NULL;
 }
 
-void value_print(const struct value *val) {
-  printf("%lf\n", val->data);
-}
+void value_print(const struct value *val)
+{ printf("%lf\n", val->data); }
 
 void value_repl(struct value *dest, struct value *src) {
   *dest = *src;

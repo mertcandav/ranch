@@ -22,14 +22,11 @@ void bopbase_setup(void) {
   bop_base.bop->events->modulo_by_zero = &event_modulo_by_zero;
 }
 
-void event_failed(void) {
-  bop_base.failed = 1;
-}
+void event_failed(void)
+{ bop_base.failed = 1; }
 
-void event_divided_by_zero(void) {
-  LOG_WARNING(WARNING_DIVIDED_BY_ZERO);
-}
+void event_divided_by_zero(void)
+{ LOG_WARNING(WARNING_DIVIDED_BY_ZERO); }
 
-void event_modulo_by_zero(void) {
-  LOG_WARNING(WARNING_MODULO_BY_ZERO);
-}
+void event_modulo_by_zero(void)
+{ LOG_WARNING(WARNING_MODULO_BY_ZERO); }

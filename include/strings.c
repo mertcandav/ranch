@@ -122,7 +122,6 @@ long long wcsfind(const wchar_t *str, const wchar_t *substr) {
 
 void wcslower(wchar_t *str) {
   size_t len = wcslen(str);
-  for (size_t index = 0; index < len; ++index) {
-    str[index] = towlower(str[index]);
-  }
+  for (size_t index = 0; index < len; ++index)
+  { str[index] = towlower(str[index]); }
 }

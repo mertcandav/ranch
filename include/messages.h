@@ -16,6 +16,7 @@ extern "C" {
 #define ERROR_OPERATOR_OVERFLOW L"ERROR: Operator overlow!"
 #define ERROR_INVALID_SYNTAX L"ERROR: Invalid syntax!"
 #define ERROR_COMPUTED_FAILED L"ERROR: Computed failed!"
+#define ERROR_FLOAT_POINT_OVERFLOW L"ERROR: Double pointed float literal!"
 
 #define WARNING_DIVIDED_BY_ZERO L"WARN: Divided by zero, result computed as zero!"
 #define WARNING_MODULO_BY_ZERO L"WARN: Modulo by zero, result computed as zero!"
