@@ -23,8 +23,14 @@ struct list *list_new(size_t size);
 void list_free(struct list *lst);
 // Appends item to list.
 void list_push(struct list *lst, void *item);
-// Removed elements between this range, except "end" index.
-void list_remrange(struct list* lst, const size_t start, size_t end);
+// Removes n elements starts at specified index.
+// If n greater than size, uses size instead of n.
+//
+// Special cases are:
+//  list_remrange(lst, start, n) = nothing if n < 1
+//  list_remrange(lst, start, n) = nothing if start < 0
+//  list_remrange(lst, start, n) = nothing if start > size
+void list_remrange(struct list* lst, const size_t start, size_t n);
 
 #ifdef __cplusplus
 }
