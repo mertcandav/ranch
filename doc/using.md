@@ -2,7 +2,15 @@
 
 Ranch accepts non-command inputs as expression for compute.
 
-## Operators
+## Navigation
++ [Operators](#operators)
+  + [Precedences](#precedences)
++ [Numeric Literals](#numeric-literals)
+  + [Integer](#integer)
+  + [Float](#float)
++ [Examples](#examples)
+
+<h2 id="operators">Operators</h2>
 
 > Ranch supports process priority.
 >
@@ -14,35 +22,48 @@ Ranch accepts non-command inputs as expression for compute.
 + `^` Exponentiation.
 + `%` Modulo.
 
-### Precedences
-  <table>
-    <tr>
-      <th>Precedence</th>
-      <th>Operator(s)</th>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td>* / \ %</td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td>+ - ^</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>N/A</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>N/A</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>N/A</td>
-    </tr>
-  </table>
+<h3 id="precedences">Precedences</h3>
+<table>
+  <tr>
+    <th>Precedence</th>
+    <th>Operator(s)</th>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>* / \ %</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>+ - ^</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>N/A</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>N/A</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>N/A</td>
+  </tr>
+</table>
 
-## Exmaples
+<h2 id="numeric-literals">Numeric Literals</h2>
+<h3 id="integer">Integer</h3>
+```
+35363635
+```
+
+<h3 id="float">Float</h3>
+```
+3.4
+0.
+363.
+```
+
+<h2 id="examples">Exmaples</h2>
 
 ```
 Ranch> 5+5+5+5+5
