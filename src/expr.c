@@ -19,7 +19,6 @@ static void free_operations(struct list *operations);
 static long long next_operator(const struct list *processes);
 static struct value *compute_expr(struct list *processes);
 static struct value *compute_value_part(struct list *tokens);
-static void erase_processes(struct list *model, long long start, long long end);
 
 static long long next_operator(const struct list *processes) {
   long long precedence5 = -1;
@@ -49,28 +48,6 @@ static struct value *compute_value_part(struct list *tokens) {
   return val;
 }
 
-static void erase_processes(struct list *model, long long start, long long end) {
-       if (start < 0)    { return; }
-  else if (end < start)  { return; }
-  else if (start == end) { return; }
-  if (end > model->used) { end = model->used; }
-  struct list *lst = list_new(model->used-(end-start));
-  for (size_t index = 0; index < start; ++index)
-  { list_push(lst, model->array[index]); }
-  for (size_t index = end; index < model->used; ++index)
-  { list_push(lst, model->array[index]); }
-  model->used = lst->used;
-  model->size = lst->size;
-  free(model->array);
-  model->array = NULL;
-  *model = *lst;
-  lst->size = 0;
-  lst->used = 0;
-  lst->array = NULL;
-  free(lst);
-  lst = NULL;
-}
-
 static struct value *compute_expr(struct list *processes) {
   if (processes->used == 0) { return NULL; }
   if (processes->used == 1) { return compute_value_part((struct list*)(processes->array[0])); }
@@ -85,7 +62,7 @@ static struct value *compute_expr(struct list *processes) {
       bop->right = compute_value_part((struct list*)(processes->array[1]));
       value_repl(val, binopr_solve(bop));
       value_free(bop->right);
-      erase_processes(processes, 0, 2);
+      list_remrange(processes, 0, 2);
       goto end;
     }
     if (j == processes->used-1) {
@@ -94,7 +71,7 @@ static struct value *compute_expr(struct list *processes) {
       bop->right = val;
       value_repl(val, binopr_solve(bop));
       value_free(bop->left);
-      erase_processes(processes, j-1, processes->used);
+      list_remrange(processes, j-1, processes->used);
       goto end;
     }
     {
@@ -105,7 +82,7 @@ static struct value *compute_expr(struct list *processes) {
         bop->right = compute_value_part((struct list*)(processes->array[j+1]));
         value_repl(val, binopr_solve(bop));
         value_free(bop->right);
-        erase_processes(processes, j+2, j);
+        list_remrange(processes, j+2, j);
         goto end;
       }
     }
@@ -126,7 +103,7 @@ static struct value *compute_expr(struct list *processes) {
         val = solved;
       }
     }
-    erase_processes(processes, j-1, j+2);
+    list_remrange(processes, j-1, j+2);
     if (processes->used == 1) { break; }
   end:
     j = next_operator(processes);

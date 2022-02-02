@@ -23,6 +23,8 @@ struct list *list_new(size_t size);
 void list_free(struct list *lst);
 // Appends item to list.
 void list_push(struct list *lst, void *item);
+// Removed elements between this range, except "end" index.
+void list_remrange(struct list* lst, const size_t start, size_t end);
 
 #ifdef __cplusplus
 }

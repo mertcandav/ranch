@@ -42,3 +42,25 @@ void list_push(struct list* lst, void *item) {
   }
   lst->array[lst->used++] = item;
 }
+
+void list_remrange(struct list *lst, const size_t start, size_t end) {
+       if (start < 0)    { return; }
+  else if (end < start)  { return; }
+  else if (start == end) { return; }
+  if (end > lst->used) { end = lst->used; }
+  struct list *new_lst = list_new(lst->used-(end-start));
+  for (size_t index = 0; index < start; ++index)
+  { list_push(new_lst, lst->array[index]); }
+  for (size_t index = end; index < lst->used; ++index)
+  { list_push(new_lst, lst->array[index]); }
+  lst->used = lst->used;
+  lst->size = lst->size;
+  free(lst->array);
+  lst->array = NULL;
+  *lst = *new_lst;
+  new_lst->size = 0;
+  new_lst->used = 0;
+  new_lst->array = NULL;
+  free(new_lst);
+  new_lst = NULL;
+}
