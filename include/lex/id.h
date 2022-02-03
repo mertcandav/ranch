@@ -14,6 +14,7 @@ extern "C" {
 #define ID_IGNORE 1
 #define ID_OPERATOR 2
 #define ID_VALUE 3
+#define ID_BRACE 4
 
 #ifdef __cplusplus
 }

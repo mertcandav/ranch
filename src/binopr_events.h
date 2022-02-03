@@ -13,13 +13,12 @@ extern "C" {
 // Binary operation event processor end logger.
 struct binopr_base {
   volatile unsigned char failed;
-  struct binopr         *bop;
-} bop_base;
+} bopbase;
 
 // Resets everything (frees binopr and events).
 void bopbase_reset(void);
-// Setup bopbase (not resets old, allocates binopr from heap).
-void bopbase_setup(void);
+// Returns new setted events binopr instance allocated from heap.
+struct binopr *bopbase_newbop(void);
 void event_failed(void);
 void event_divided_by_zero(void);
 void event_modulo_by_zero(void);

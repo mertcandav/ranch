@@ -68,18 +68,22 @@ Ranch accepts non-command inputs as expression for compute.
 
 ```
 Ranch> 5+5+5+5+5
-25,00000
+25,000000
 Ranch>
 ```
 ```
 Ranch> 5+5+5+5+5/0
 [WARNING FOR ZERO DIVISION]
-20,00000
+20,000000
 Ranch>
 ```
-
 ```
 Ranch> 5.5-5
-0,50000
+0,500000
+Ranch>
+```
+```
+Ranch> (5-2)*(10+2)
+36,000000
 Ranch>
 ```

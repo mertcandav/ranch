@@ -15,6 +15,7 @@ extern "C" {
 typedef struct lexer {
   unsigned char      failed;
   unsigned char      finished;
+  long long          parentheses;
   wchar_t            *text;
   // Current lexer column.
   // This is a index value actually.

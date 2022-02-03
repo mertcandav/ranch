@@ -44,11 +44,11 @@ int main(int argc, char **argv) {
 #endif // __WIN32
   setlocale(0x0, "");
   wprintf(TITLE_SET(L"Ranch " RANCH_VERSION));
+  // Prints once Ranch opening message at screen.
+  wprintf(L"Ranch CLI Calculator\nVersion " RANCH_VERSION L"\n\n");
   term = terminal_new();
   term->routine_message = (wchar_t*)(L"Ranch");
   term->sep = (wchar_t*)(TOKEN_GREATER L" ");
-  // Prints once Ranch opening message at screen.
-  wprintf(L"Ranch CLI Calculator\nVersion " RANCH_VERSION L"\n\n");
   terminal_loop(term, term_loop);
   terminal_free(term);
   return EXIT_SUCCESS;

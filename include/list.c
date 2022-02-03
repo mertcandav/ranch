@@ -51,7 +51,7 @@ void list_remrange(struct list *lst, const size_t start, size_t n) {
   struct list *new_lst = list_new(lst->used-n);
   for (size_t index = 0; index < start; ++index)
   { list_push(new_lst, lst->array[index]); }
-  for (size_t index = start+n+1; index < lst->used; ++index)
+  for (size_t index = start+n; index < lst->used; ++index)
   { list_push(new_lst, lst->array[index]); }
   lst->used = new_lst->used;
   lst->size = new_lst->size;
@@ -63,4 +63,14 @@ void list_remrange(struct list *lst, const size_t start, size_t n) {
   new_lst->array = NULL;
   free(new_lst);
   new_lst = NULL;
+}
+
+struct list *list_slice(struct list *lst, size_t start, size_t n) {
+       if (!lst)      { return NULL; }
+  else if (start < 0) { return NULL; }
+  else if (n < 1)     { return NULL; }
+  if (n > lst->used-start) { n = lst->used; }
+  struct list* slice = list_new(n);
+  for (; n >= 0; --n) { list_push(slice, lst->array[start++]); }
+  return slice;
 }

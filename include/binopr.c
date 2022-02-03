@@ -39,6 +39,8 @@ struct binopr *binopr_new(void) {
 }
 
 void binopr_free(struct binopr *bop) {
+  if (!bop) { return; }
+  expr_events_free(bop->events);
   free(bop);
   bop = NULL;
 }
@@ -105,6 +107,10 @@ static struct value *solve_reverse_slash(const struct binopr *bop) {
 }
 
 struct value *binopr_solve(struct binopr *bop) {
+  if (!bop->left || !bop->right) {
+    expr_events_invoke(bop->events->failed);
+    return NULL;
+  }
        if (wcscmp(bop->opr, TOKEN_PLUS) == 0)          { return solve_plus(bop); }
   else if (wcscmp(bop->opr, TOKEN_MINUS) == 0)         { return solve_minus(bop); }
   else if (wcscmp(bop->opr, TOKEN_STAR) == 0)          { return solve_star(bop); }

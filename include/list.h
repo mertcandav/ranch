@@ -31,6 +31,15 @@ void list_push(struct list *lst, void *item);
 //  list_remrange(lst, start, n) = nothing if start < 0
 //  list_remrange(lst, start, n) = nothing if start > size
 void list_remrange(struct list* lst, const size_t start, size_t n);
+// Returns new list from source list by specified index and n.
+// If n greater than size, uses size instead of n.
+//
+// Special cases are:
+//  list_slice(lst, start, n) = NULL if lst == NULL
+//  list_slice(lst, start, n) = NULL if n < 1
+//  list_slice(lst, start, n) = NULL if start < 0
+//  list_slice(lst, start, n) = NULL if start > size
+struct list *list_slice(struct list *lst, size_t start, size_t n);
 
 #ifdef __cplusplus
 }

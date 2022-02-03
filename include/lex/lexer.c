@@ -5,7 +5,7 @@
 #include "../messages.h"
 #include "../terminal/log.h"
 
-#define IS_OPERATOR(text, kind) (wcsfind(text, kind) == 0)
+#define IS_PUNCT(text, kind) (wcsfind(text, kind) == 0)
 // Resume from last column.
 // Skips if starts with spaces or something ignored values.
 #define RESUME() while (wcs_isspace(lex->text[lex->column])) { ++lex->column; }
@@ -14,6 +14,7 @@
 // If specified message is NULL, prints default error.
 static inline void error(struct lexer *lex, const wchar_t *message);
 static unsigned char lex_numeric(struct lexer *lex, wchar_t *text, struct token *tok);
+static unsigned char lex_punct(struct lexer *lex, wchar_t *text, struct token *tok);
 static unsigned char lex_operator(struct lexer *lex, const wchar_t *text, struct token *tok);
 
 struct lexer *lexer_new(wchar_t *text) {
@@ -25,6 +26,7 @@ struct lexer *lexer_new(wchar_t *text) {
   lex->column = 0;
   lex->failed = 0;
   lex->finished = 0;
+  lex->parentheses = 0;
   lex->text = text;
   return lex;
 }
@@ -42,6 +44,10 @@ struct list *lexer_lex(struct lexer *lex) {
     if (tok->id == ID_IGNORE) { continue; }
     list_push(tokens, tok);
   }
+  if (lex->parentheses > 0) {
+    lex->column = wcslen(lex->text)-1;
+    error(lex, ERROR_NOT_CLOSED_ALL_PARENTHSES);
+  }
   return tokens;
 }
 
@@ -56,6 +62,7 @@ struct token *lexer_next(struct lexer *lex) {
   tok->column = lex->column + 1; // Increase one for true column value.
   wchar_t *text = wcssub(lex->text, lex->column);
   if (lex_operator(lex, text, tok)) { goto end; }
+  if (lex_punct(lex, text, tok))    { goto end;}
   if (lex_numeric(lex, text, tok))  { goto end; }
   if (!lex->failed) { error(lex, NULL); }
   free(text);
@@ -72,23 +79,53 @@ end:
 void lexer_reset(struct lexer *lex) {
   lex->finished = 0;
   lex->column = 0;
+  lex->parentheses = 0;
 }
 
-static unsigned char lex_operator(struct lexer *lex, const wchar_t *text, struct token *tok) {
+static unsigned char lex_operator(
+  struct lexer *lex,
+  const wchar_t *text,
+  struct token *tok) {
   unsigned char state = 0;
-       if ((state = IS_OPERATOR(text, TOKEN_PLUS)))          { token_setkind(tok, TOKEN_PLUS); }
-  else if ((state = IS_OPERATOR(text, TOKEN_MINUS)))         { token_setkind(tok, TOKEN_MINUS); }
-  else if ((state = IS_OPERATOR(text, TOKEN_STAR)))          { token_setkind(tok, TOKEN_STAR); }
-  else if ((state = IS_OPERATOR(text, TOKEN_SLASH)))         { token_setkind(tok, TOKEN_SLASH); }
-  else if ((state = IS_OPERATOR(text, TOKEN_CARET)))         { token_setkind(tok, TOKEN_CARET); }
-  else if ((state = IS_OPERATOR(text, TOKEN_PERCENT)))       { token_setkind(tok, TOKEN_PERCENT); }
-  else if ((state = IS_OPERATOR(text, TOKEN_REVERSE_SLASH))) { token_setkind(tok, TOKEN_REVERSE_SLASH); }
+  if ((state = IS_PUNCT(text, TOKEN_PLUS)))
+  { token_setkind(tok, TOKEN_PLUS); }
+  else if ((state = IS_PUNCT(text, TOKEN_MINUS)))
+  { token_setkind(tok, TOKEN_MINUS); }
+  else if ((state = IS_PUNCT(text, TOKEN_STAR)))
+  { token_setkind(tok, TOKEN_STAR); }
+  else if ((state = IS_PUNCT(text, TOKEN_SLASH)))
+  { token_setkind(tok, TOKEN_SLASH); }
+  else if ((state = IS_PUNCT(text, TOKEN_CARET)))
+  { token_setkind(tok, TOKEN_CARET); }
+  else if ((state = IS_PUNCT(text, TOKEN_PERCENT)))
+  { token_setkind(tok, TOKEN_PERCENT); }
+  else if ((state = IS_PUNCT(text, TOKEN_REVERSE_SLASH)))
+  { token_setkind(tok, TOKEN_REVERSE_SLASH); }
   // If tokenization is success, sets token is an operator.
   if (state) { tok->id = ID_OPERATOR; }
   return state;
 }
 
-static unsigned char lex_numeric(struct lexer *lex, wchar_t *text, struct token *tok) {
+static unsigned char lex_punct(struct lexer *lex,
+                               wchar_t *text,
+                               struct token *tok) {
+  if (IS_PUNCT(text, TOKEN_LEFT_PARENTHESES)) {
+    token_setkind(tok, TOKEN_LEFT_PARENTHESES);
+    ++lex->parentheses;
+  } else if (IS_PUNCT(text, TOKEN_RIGHT_PARENTHESES)) {
+    if (--lex->parentheses < 0) {
+      error(lex, ERROR_EXTRA_PARENTHESES_CLOSED);
+      return 0;
+    }
+    token_setkind(tok, TOKEN_RIGHT_PARENTHESES);
+  }
+  if (tok->kind) { tok->id = ID_BRACE; }
+  return tok->kind != NULL;
+}
+
+static unsigned char lex_numeric(struct lexer *lex,
+                                 wchar_t *text,
+                                 struct token *tok) {
   if (!wcs_isnumber(text[0])) { return 0; }
   unsigned long long column = 0;
   // For floated values.

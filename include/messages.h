@@ -17,6 +17,9 @@ extern "C" {
 #define ERROR_INVALID_SYNTAX L"ERROR: Invalid syntax!"
 #define ERROR_COMPUTED_FAILED L"ERROR: Computed failed!"
 #define ERROR_FLOAT_POINT_OVERFLOW L"ERROR: Double pointed float literal!"
+#define ERROR_EXTRA_PARENTHESES_CLOSED L"ERROR: Extra parentheses closed!"
+#define ERROR_NOT_CLOSED_ALL_PARENTHSES L"ERROR: All parentheses is not closed!"
+#define ERROR_PARENTHESES_EMPTY L"ERROR: Parentheses content is empty!"
 
 #define WARNING_DIVIDED_BY_ZERO L"WARN: Divided by zero, result computed as zero!"
 #define WARNING_MODULO_BY_ZERO L"WARN: Modulo by zero, result computed as zero!"
