@@ -6,15 +6,15 @@
 #include "token.h"
 #include "../messages.h"
 
-struct token *token_new(
-  const unsigned short id,
-  const wchar_t *kind,
-  const unsigned long long column) {
-  struct token *tok = (struct token*)(calloc(1, sizeof(struct token)));
+struct token *token_new(const unsigned short id,
+                        const wchar_t *kind,
+                        const unsigned long long column) {
+  struct token *tok = (struct token*)(malloc(sizeof(struct token)));
   if (!tok) {
     wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);
   }
+  tok->kind = NULL;
   tok->column = column;
   tok->id = id;
   if (kind) { token_setkind(tok, kind); }

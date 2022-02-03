@@ -3,13 +3,12 @@
 #include "../lex/id.h"
 #include "../lex/tokens.h"
 
-static unsigned char require_operator(
-  const struct token *tok,
-  const size_t index,
-  const size_t len);
+static unsigned char require_operator(const struct token *tok,
+                                      const size_t index,
+                                      const size_t len);
 
 struct astbuilder *astbuilder_new(struct list *tokens) {
-  struct astbuilder *astb = (struct astbuilder*)(calloc(1, sizeof(struct astbuilder)));
+  struct astbuilder *astb = (struct astbuilder*)(malloc(sizeof(struct astbuilder)));
   if (!astb) {
     wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);
@@ -72,14 +71,17 @@ struct list *astbuilder_build(struct astbuilder *astb) {
   return processes;
 }
 
-void astbuilder_pusherr(struct astbuilder *astb, struct token *tok, wchar_t *message) {
+void astbuilder_pusherr(struct astbuilder *astb,
+                        struct token *tok,
+                        wchar_t *message) {
   struct asterror *err = asterror_new();
   err->message = message;
   err->column = tok->column;
   list_push(astb->errors, err);
 }
 
-unsigned char astbuilder_logerr(struct astbuilder *astb, const unsigned char freeErr) {
+unsigned char astbuilder_logerr(struct astbuilder *astb,
+                                const unsigned char freeErr) {
   if (astb->errors->used < 1) { return 0; }
   for (size_t index = 0; index < astb->errors->used; ++index) {
     struct asterror *err = (struct asterror*)(astb->errors->array[index]);

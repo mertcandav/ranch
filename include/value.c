@@ -6,7 +6,7 @@
 #include "messages.h"
 
 struct value *value_new(void) {
-  struct value *val = (struct value*)calloc(1, sizeof(struct value));
+  struct value *val = (struct value*)malloc(sizeof(struct value));
   if (!val) {
     wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);

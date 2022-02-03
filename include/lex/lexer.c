@@ -62,7 +62,7 @@ struct token *lexer_next(struct lexer *lex) {
   tok->column = lex->column + 1; // Increase one for true column value.
   wchar_t *text = wcssub(lex->text, lex->column);
   if (lex_operator(lex, text, tok)) { goto end; }
-  if (lex_punct(lex, text, tok))    { goto end;}
+  if (lex_punct(lex, text, tok))    { goto end; }
   if (lex_numeric(lex, text, tok))  { goto end; }
   if (!lex->failed) { error(lex, NULL); }
   free(text);
@@ -82,10 +82,9 @@ void lexer_reset(struct lexer *lex) {
   lex->parentheses = 0;
 }
 
-static unsigned char lex_operator(
-  struct lexer *lex,
-  const wchar_t *text,
-  struct token *tok) {
+static unsigned char lex_operator(struct lexer *lex,
+                                  const wchar_t *text,
+                                  struct token *tok) {
   unsigned char state = 0;
   if ((state = IS_PUNCT(text, TOKEN_PLUS)))
   { token_setkind(tok, TOKEN_PLUS); }
@@ -144,7 +143,7 @@ static unsigned char lex_numeric(struct lexer *lex,
     }
     const wchar_t wch = text[column];
     if (wcs_isnumber(wch)) {
-      if ((wch == 48 && count > 0) || wch != 48) { count++; }
+      if ((wch == 48 && count > 0) || wch != 48) { ++count; }
       continue;
     }
     break;

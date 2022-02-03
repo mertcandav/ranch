@@ -74,11 +74,11 @@ void process_input(wchar_t *cmd) {
     head = cmd;
     cmd = NULL;
   }
-       if (wcscmp(head, COMMAND_HELP) == 0)  { command_help(cmd); }
+  if (wcscmp(head, COMMAND_HELP) == 0)       { command_help(cmd); }
   else if (wcscmp(head, COMMAND_EXIT) == 0)  { command_exit(cmd); }
   else if (wcscmp(head, COMMAND_ABOUT) == 0) { command_about(cmd); }
   else if (wcscmp(head, COMMAND_CLEAR) == 0) { command_clear(cmd); }
-  else                                       { LOG_ERROR(ERROR_NOTEXIST_COMMAND); }
+  else { LOG_ERROR(ERROR_NOTEXIST_COMMAND); }
   if (cmd) {
     free(head);
     head = NULL;

@@ -19,7 +19,9 @@ typedef struct token {
 } token;
 
 // Create new token instance allocated from heap.
-struct token *token_new(const unsigned short id, const wchar_t *kind, const unsigned long long column);
+struct token *token_new(const unsigned short id,
+                        const wchar_t *kind,
+                        const unsigned long long column);
 // Free token instance allocated from heap.
 void token_free(struct token *tok);
 // Set kind of token.

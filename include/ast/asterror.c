@@ -5,7 +5,7 @@
 #include "../messages.h"
 
 struct asterror *asterror_new(void) {
-  struct asterror *err = (struct asterror*)(calloc(1, sizeof(struct asterror)));
+  struct asterror *err = (struct asterror*)(malloc(sizeof(struct asterror)));
   if (!err) {
     wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);

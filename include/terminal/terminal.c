@@ -13,14 +13,13 @@ void enable_virtual_terminal_processing(void) {
   DWORD dwMode = 0;
   HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
   if (hOut == INVALID_HANDLE_VALUE) { return; }
-  if (GetConsoleMode(hOut, &dwMode)) {
-    SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-  }
+  if (GetConsoleMode(hOut, &dwMode))
+  { SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING); }
 }
 #endif // __WIN32
 
 struct terminal *terminal_new(void) {
-  struct terminal *term = (struct terminal*)calloc(1, sizeof(struct terminal));
+  struct terminal *term = (struct terminal*)malloc(sizeof(struct terminal));
   if (!term) {
     wprintf(ERROR_ALLOCATION_FAILED L"\n");
     exit(EXIT_FAILURE);
@@ -75,6 +74,5 @@ void terminal_loop(struct terminal *term, void(*f)(wchar_t *input)) {
   while (term->inloop) { (*f)(terminal_once(term)); }
 }
 
-void terminal_stop(struct terminal *term) {
-  term->inloop = 0;
-}
+void terminal_stop(struct terminal *term)
+{ term->inloop = 0; }

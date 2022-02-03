@@ -15,10 +15,10 @@ extern "C" {
 
 // Binary operation.
 typedef struct binopr {
-  struct value       *left;
-  wchar_t            *opr;
-  struct value       *right;
-  struct expr_events *events;
+  struct value      *left;
+  wchar_t           *opr;
+  struct value      *right;
+  struct exprevents *events;
 } binopr;
 
 // Create new binopr instance allocated from heap.
