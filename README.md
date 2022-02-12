@@ -1,8 +1,7 @@
 # Ranch
 Ranch is a toy CLI based calculator for fun.
 
-The purpose of this project, make calculator for fun.<br>
-Features such as built-in functions, operation priority, operators, and user-defined functions are planned.
+The purpose of this project, make calculator for fun.
 
 _Probably i will delete (maybe archive) this project after fun._
 
