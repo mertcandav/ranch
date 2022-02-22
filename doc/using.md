@@ -52,19 +52,21 @@ Ranch accepts non-command inputs as expression for compute.
 
 <h2 id="numeric-literals">Numeric Literals</h2>
 <h3 id="integer">Integer</h3>
+
 ```
 35363635
 0xFF94
 ```
 
 <h3 id="float">Float</h3>
+
 ```
 3.4
 0.
 363.
 ```
 
-<h2 id="examples">Exmaples</h2>
+<h2 id="examples">Examples</h2>
 
 ```
 Ranch> 5+5+5+5+5
